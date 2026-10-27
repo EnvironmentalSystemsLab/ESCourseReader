@@ -1,0 +1,11 @@
+/* Chapters 07 and 08 components (heat transfer, heat balance). Loaded after styles.css, theme.css and solar.css. */
+@layer components {
+  .compare-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; max-width: 1000px; margin: 8px 0 22px; padding: 16px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .compare-grid .control-kicker { margin-bottom: 8px; color: var(--accent); }
+  .compare-grid .facts { font-size: 13.5px; margin-bottom: 16px; }
+  /* Prose columns in the heat tables: no italics, allow wrapping. */
+  .heat-table td { font-style: normal !important; white-space: normal !important; }
+  .heat-table tbody th { white-space: normal; min-width: 120px; }
+  .reader-section h3 { margin: 28px 0 10px; font-size: 16px; }
+  @media (max-width: 900px) { .compare-grid { grid-template-columns: 1fr; } }
+}
