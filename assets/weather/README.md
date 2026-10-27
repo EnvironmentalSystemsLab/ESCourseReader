@@ -4,7 +4,7 @@ Source: [Climate.OneBuilding.org](https://climate.onebuilding.org/). All files a
 
 The original EPW files are preserved. These public weather datasets retain their source attribution; the repository's code license does not assert ownership of the underlying observations.
 
-Run `npm run generate:climate` to regenerate the browser data (src/climate-data.js for Ithaca and assets/weather/data/*.js for the other files), the comparison table, 28 vector drawings, the vector atlas, and the static principle content. Means and charts are computed in src/climate.js and src/climate-diagrams.js; no synthetic weather observations are substituted.
+Run `./reader generate:climate` to regenerate the browser data (src/climate-data.js for Ithaca and assets/weather/data/*.js for the other files), the comparison table, 28 vector drawings, the vector atlas, and the static principle content. Means and charts are computed in src/climate.js and src/climate-diagrams.js; no synthetic weather observations are substituted.
 
 ## Fairbanks, AK
 
