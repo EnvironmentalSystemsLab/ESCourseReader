@@ -274,7 +274,7 @@ function makeKit(k) {
     const arc = range(25, i => { const t = tB + dt * i / 24; return P(rc * Math.cos(t), rc * Math.sin(t), zc); });
     return poly2([...sil, ...arc], fill, edge, .9);
   };
-  // Daily sun path (latitude, declination) centred on the plinth; hour angle in degrees.
+  // Daily sun path (latitude, declination) centered on the plinth; hour angle in degrees.
   const sunVec = (lat, dec, ha) => {
     const n = [0, -Math.cos(lat * rad), Math.sin(lat * rad)], m = [0, Math.sin(lat * rad), Math.cos(lat * rad)];
     return [0, 1, 2].map(i => n[i] * Math.sin(dec * rad) + Math.cos(dec * rad) * (m[i] * Math.cos(ha * rad) - (i === 0 ? Math.sin(ha * rad) : 0)));

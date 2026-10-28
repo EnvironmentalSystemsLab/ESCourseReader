@@ -78,7 +78,7 @@ function coordGlobe(k, site) {
   return g;
 }
 
-/* C: meridian section — latitude is an angle at the centre, north–south. */
+/* C: meridian section — latitude is an angle at the center, north–south. */
 function coordSection(k, site) {
   const c = k.c, lat = site.latitude, B = { x: 812, y: 304 }, r = 44;
   let g = k.title(758, 246, 'C · Latitude') + k.circle(B, r, { fill: c.earth, stroke: c.buildingEdge, width: 1.3 });

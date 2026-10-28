@@ -23,7 +23,7 @@ export const sunVector = (alt, azi) => ({ x: sind(azi) * cosd(alt), y: cosd(azi)
 
 /* ── Shadow geometry ──────────────────────────────────────────────────────── */
 
-/** Axis-aligned box: x (east), y (north), z (up) ranges in metres. */
+/** Axis-aligned box: x (east), y (north), z (up) ranges in meters. */
 export const box = (x0, x1, y0, y1, z0, z1) => ({ x: [x0, x1], y: [y0, y1], z: [z0, z1] });
 const corners = b => b.x.flatMap(x => b.y.flatMap(y => b.z.map(z => ({ x, y, z }))));
 /** Point in a plane's own (u, v) coordinates lifted back to 3D. */
@@ -478,7 +478,7 @@ export function figSketchPlan(standalone = false, day = 80, hour = 10) {
       sc2 += p.line({ x: tip.x, y: o2.y + 4 }, { x: tip.x, y: y + 2 }, { w: .6, color: c.muted, bow: 0 }) + p.line({ x: tip.x, y }, { x: o2.x, y }, { w: .9, color: c.azi, bow: 0 }) + k.label(tip.x - 6, y + 4, `${h} m → ${(h * F).toFixed(1)} m`, { size: 11.5, fill: c.azi, weight: 650, anchor: 'end' });
     });
     sc2 += p.angle({ x: o2.x - 9 * F * s2, y: o2.y }, 30, 0, sun.altitude, `${sun.altitude.toFixed(1)}°`, c.alt, { offset: 16 });
-    sc2 += k.text(560, 450, `Each metre of height casts ${F.toFixed(2)} m of shadow (1 / tan ALT).`, { size: 11.5 }) + k.text(560, 466, 'Take lengths off with dividers; lay them along the bearing.', { size: 11.5 });
+    sc2 += k.text(560, 450, `Each meter of height casts ${F.toFixed(2)} m of shadow (1 / tan ALT).`, { size: 11.5 }) + k.text(560, 466, 'Take lengths off with dividers; lay them along the bearing.', { size: 11.5 });
     body += k.group('shadow-scale', sc2);
   }
   body += k.text(30, 540, 'Shadow of block A (+9 m) falls partly on the roof of block B (+3 m): there the shadow only needs the height difference, 6 m × ' + F.toFixed(2) + '.', { size: 11.5 });

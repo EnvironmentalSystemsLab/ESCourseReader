@@ -1,4 +1,4 @@
-/** Geometric solar model for the course reader. Degrees, metres, minutes, solar hours.
+/** Geometric solar model for the course reader. Degrees, meters, minutes, solar hours.
  * The equations follow Szokolay, Method sheet M.1.1:
  *   DEC  Cooper (1969):  DEC = 23.45 sin[360/365 (284 + NDY)]
  *   EOT  Spencer (1971), as in Duffie & Beckman: B = (NDY - 1) 360/365
@@ -188,7 +188,7 @@ export function polygonsOverlap(a, b) {
   }
   return true;
 }
-/** Massing study (default: Ithaca, March 21). The neighbours lie north of the proposed building. */
+/** Massing study (default: Ithaca, March 21). The neighbors lie north of the proposed building. */
 export function massingStudy(height = 6, gap = 3, solarHour = 12, day = 80, latitude = 42.4) {
   const sun = solarPosition(latitude, day, solarHour);
   const wings = [{ x: -3, y: 0, w: 3, d: 6, h: 3 }, { x: 0, y: 0, w: 3, d: 6, h: height }];

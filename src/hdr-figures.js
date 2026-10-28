@@ -11,10 +11,10 @@ const IMG = './assets/hdr/';
 
 /** Lines of text, one below the other. */
 const lines = (k, x, y, arr, o = {}) => arr.map((t, i) => k.text(x, y + i * (o.step ?? 18), t, { size: 12, ...o })).join('');
-/** Arrow in a coloured pencil, as for the angles in Chapters 02–05. */
-const ray = (k, a, b, colour, name) => k.line(a, b, { stroke: colour, width: 1.4, arrow: name });
+/** Arrow in a colored pencil, as for the angles in Chapters 02–05. */
+const ray = (k, a, b, color, name) => k.line(a, b, { stroke: color, width: 1.4, arrow: name });
 
-/** A camera on a tripod in section, lens toward +x. Returns the lens centre too. */
+/** A camera on a tripod in section, lens toward +x. Returns the lens center too. */
 function tripod(k, x, floor, lensY) {
   const c = k.c;
   let g = k.rect(x - 22, lensY - 13, 34, 26, { fill: c.paper, stroke: c.ink, width: PEN.outline });
@@ -146,7 +146,7 @@ export function figMeters(standalone = false) {
 /* 05 · Three measurements, three questions */
 export function figMethods(standalone = false) {
   const k = kit(standalone, 'hmm'), c = k.c, floor = 250;
-  const panel = (x, title, unit, colour, notes, use) => k.title(x, 36, title) + k.text(x, 64, unit, { size: 20, weight: 700, fill: colour }) + lines(k, x, 290, notes, { fill: c.ink }) + k.text(x, 372, use, { size: 12, weight: 600, fill: colour });
+  const panel = (x, title, unit, color, notes, use) => k.title(x, 36, title) + k.text(x, 64, unit, { size: 20, weight: 700, fill: color }) + lines(k, x, 290, notes, { fill: c.ink }) + k.text(x, 372, use, { size: 12, weight: 600, fill: color });
   // A: spot luminance.
   let a = panel(30, 'A · Spot luminance', 'L  cd/m²', c.alt, ['Aim from near the lens position.', 'Keep the whole spot inside one', 'uniform matte surface. Repeat', 'on several targets.'], 'Sets the image scale.');
   a += k.rect(40, 130, 46, 24, { fill: c.paper, stroke: c.ink, width: PEN.outline }) + k.rect(86, 134, 14, 16, { fill: c.shadow }) + k.line({ x: 60, y: 154 }, { x: 60, y: floor }, { stroke: c.ink, width: PEN.edge });
@@ -194,15 +194,15 @@ export function figCalibration(standalone = false, href = null) {
 /* 07 · From exposures to evidence */
 export function figWorkflow(standalone = false) {
   const k = kit(standalone, 'hwf'), c = k.c, w = 280, h = 132;
-  const box = (x, y, title, body, o = {}) => k.rect(x, y, o.w ?? w, o.h ?? h, { fill: c.paper, stroke: c.ink, width: o.pen ?? PEN.outline }) + k.title(x + 16, y + 28, title, { fill: o.colour ?? c.ink }) + lines(k, x + 16, y + 54, body, { fill: c.ink });
+  const box = (x, y, title, body, o = {}) => k.rect(x, y, o.w ?? w, o.h ?? h, { fill: c.paper, stroke: c.ink, width: o.pen ?? PEN.outline }) + k.title(x + 16, y + 28, title, { fill: o.color ?? c.ink }) + lines(k, x + 16, y + 54, body, { fill: c.ink });
   let g = box(30, 30, '1 · Merge', ['Read the exposure metadata.', 'Align the frames; undo the', 'JPEG response curve.']);
   g += box(355, 30, '2 · Lens', ['Set projection and field of view.', 'Check the image circle.', 'Apply measured vignetting.']);
-  g += box(680, 30, '3 · Calibrate', ['Select the measured targets.', 'Enter spot readings in cd/m².', 'Inspect the fit and residuals.'], { colour: c.alt });
+  g += box(680, 30, '3 · Calibrate', ['Select the measured targets.', 'Enter spot readings in cd/m².', 'Inspect the fit and residuals.'], { color: c.alt });
   g += k.line({ x: 314, y: 96 }, { x: 350, y: 96 }, { width: PEN.outline, arrow: 'ink' }) + k.line({ x: 639, y: 96 }, { x: 675, y: 96 }, { width: PEN.outline, arrow: 'ink' });
   g += k.path('M820,166 V196 H490 V222', { stroke: c.ink, width: PEN.outline, arrow: 'ink' });
-  g += box(260, 226, '4 · Check independent measurements', ['Hold out a spot target; compare image Ev with the measured Ev.', 'Check clipping, movement, flare and changes in the scene.'], { w: 460, h: 98, pen: PEN.profile, colour: c.azi });
+  g += box(260, 226, '4 · Check independent measurements', ['Hold out a spot target; compare image Ev with the measured Ev.', 'Check clipping, movement, flare and changes in the scene.'], { w: 460, h: 98, pen: PEN.profile, color: c.azi });
   g += k.path('M400,326 V350 H170 V372', { stroke: c.ink, width: PEN.outline, arrow: 'ink' }) + k.path('M580,326 V350 H810 V372', { stroke: c.ink, width: PEN.outline, arrow: 'ink' });
-  g += box(30, 376, 'Daylight / luminance study', ['Compare surfaces and design alternatives.', 'Match view, sky and false-colour scale.'], { w: 400, h: 92 });
+  g += box(30, 376, 'Daylight / luminance study', ['Compare surfaces and design alternatives.', 'Match view, sky and false-color scale.'], { w: 400, h: 92 });
   g += box(560, 376, 'Glare · fisheye required', ['Calibrated 180° view at the eye position.', 'Inspect the sources; DGP with evalglare.'], { w: 400, h: 92 });
   const note = k.text(30, 500, 'Archive the original exposures, measurement log, lens profile, calibrated HDR, view and analysis settings together.', { size: 12 });
   return svgDocument(k, { width: 990, height: 515, title: 'Processing and validation workflow for a calibrated HDR', body: k.group('workflow', g) + k.group('note', note) });
@@ -215,7 +215,7 @@ export function pointsOverlay(width, height, points) {
     `<circle cx="${x}" cy="${y}" r="${r}" fill="#ffffff" stroke="#26333e" stroke-width="${r / 7}"/><text x="${x}" y="${y}" dy=".35em" text-anchor="middle" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="${r * 1.1}" font-weight="700" fill="#26333e">${i + 1}</text>`).join('')}</svg>`;
 }
 
-/** Turbo legend for the false-colour maps: log scale 10–10,000 cd/m², as used by LumiSnap. */
+/** Turbo legend for the false-color maps: log scale 10–10,000 cd/m², as used by LumiSnap. */
 export function luminanceLegend() {
   const stops = Array.from({ length: 17 }, (_, i) => `<stop offset="${(i / 16).toFixed(4)}" stop-color="${turbo(i / 16)}"/>`).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 14" preserveAspectRatio="none" class="turbo-bar" aria-hidden="true"><defs><linearGradient id="hdr-turbo">${stops}</linearGradient></defs><rect width="400" height="14" rx="2" fill="url(#hdr-turbo)"/></svg>`;

@@ -4,7 +4,7 @@
 const modules = [];
 // solar.js
 modules[1] = (() => {
-/** Geometric solar model for the course reader. Degrees, metres, minutes, solar hours.
+/** Geometric solar model for the course reader. Degrees, meters, minutes, solar hours.
  * The equations follow Szokolay, Method sheet M.1.1:
  *   DEC  Cooper (1969):  DEC = 23.45 sin[360/365 (284 + NDY)]
  *   EOT  Spencer (1971), as in Duffie & Beckman: B = (NDY - 1) 360/365
@@ -194,7 +194,7 @@ function polygonsOverlap(a, b) {
   }
   return true;
 }
-/** Massing study (default: Ithaca, March 21). The neighbours lie north of the proposed building. */
+/** Massing study (default: Ithaca, March 21). The neighbors lie north of the proposed building. */
 function massingStudy(height = 6, gap = 3, solarHour = 12, day = 80, latitude = 42.4) {
   const sun = solarPosition(latitude, day, solarHour);
   const wings = [{ x: -3, y: 0, w: 3, d: 6, h: 3 }, { x: 0, y: 0, w: 3, d: 6, h: height }];
@@ -556,7 +556,7 @@ modules[7] = (() => {
 // Ink kit for the Chapter 02 drawings: the same drawing calls as svg.js, rendered in the
 // fine-liner manner of the hand-drawing figures (src/sketch.js). Surfaces stay white, shade and
 // shadow become hatching, grids become light pencil, and straight ink edges run slightly past
-// their corners as if ruled by hand. Angle colours (ALT, AZI, ZEN) are kept as coloured pencil.
+// their corners as if ruled by hand. Angle colors (ALT, AZI, ZEN) are kept as colored pencil.
 const { kit, f, LINE } = modules[5];
 
 /** Pen widths shared with sketch.js, taken from the common line weights (drawing units). */
@@ -592,7 +592,7 @@ function inkKit(standalone = false, prefix = 'd', options = {}) {
     if (INK.includes(r)) return { ...o, stroke: c.ink, width: Math.max(PEN.hatch, o.width ?? 1), arrow: o.arrow ? 'ink' : undefined };
     return o;
   };
-  /** Fill mapped to paper or hatching; data colours and warnings are kept. */
+  /** Fill mapped to paper or hatching; data colors and warnings are kept. */
   const fill = color => {
     const r = roleOf(color);
     if (r in ROLE_FILL) return H[ROLE_FILL[r]];
@@ -685,7 +685,7 @@ function arc3(v, Q, u, w, r, n = 24) {
     return v(...add(Q, a.map((x, j) => r * (ka * x + kb * b[j]))));
   });
 }
-/** Panel of side 1 with tilt TLT and orientation ORI, lower edge on the ground, centred over the origin. */
+/** Panel of side 1 with tilt TLT and orientation ORI, lower edge on the ground, centered over the origin. */
 function panel(tilt, ori) {
   const N = [sind(tilt) * sind(ori), sind(tilt) * cosd(ori), cosd(tilt)];
   const u = [cosd(ori), -sind(ori), 0], w = [-cosd(tilt) * sind(ori), -cosd(tilt) * cosd(ori), sind(tilt)];
@@ -699,7 +699,7 @@ function drawIncidence(state, { standalone = false } = {}) {
   const k = kit(standalone, 'inc'), c = k.c, v = view(235, 22, 165, 330, 318);
   const sun = solarPosition(state.latitude, state.day, state.hour), i = incidence(sun, state.tilt, state.ori), p = panel(state.tilt, state.ori);
   const P = a => v(...a), C = P(p.C);
-  // Angle label just outside the middle of its arc, on the side away from the arc's centre.
+  // Angle label just outside the middle of its arc, on the side away from the arc's center.
   const arcLabel = (u, w, r, t, color) => {
     const m = add(u.map(x => x / Math.hypot(...u)), w.map(x => x / Math.hypot(...w))), q = P(add(p.C, m.map(x => x / (Math.hypot(...m) || 1)), r + .1));
     return k.label(q.x + (q.x >= C.x ? 4 : -4), q.y + 4, t, { size: 13, weight: 700, fill: color, anchor: q.x >= C.x ? 'start' : 'end' });
@@ -892,12 +892,12 @@ function shadingQuizQuestions() {
   return [
     numeric('Section 01 · Eq. 14', '°', 0.5, first => {
       const r = first ? 0.5 : between(.15, .9, .05), a = 90 - 2 * Math.atan(r) / RAD;
-      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `On a stereographic chart of radius R, a sun position lies at r = ${n(r, 2)} R from the centre. What is its altitude?`,
+      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `On a stereographic chart of radius R, a sun position lies at r = ${n(r, 2)} R from the center. What is its altitude?`,
         solution: eq(`r/R = tan(ZEN/2) → ZEN = 2 × arctan(${n(r, 2)}) = ${n(90 - a, 1)}°`) + eq(`ALT = 90° − ZEN = ${n(a, 1)}°`) + '<p>Not 45°: altitude rings are not equally spaced.</p>' };
     }),
     numeric('Section 02 · Eq. 15', '°', 0.5, first => {
       const H = first ? 12 : between(4, 40), D = first ? 20 : between(6, 60), a = Math.atan(H / D) / RAD;
-      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `A neighbouring building rises ${H} m above a window sill, at a horizontal distance of ${D} m. What is the obstruction angle perpendicular to its face?`,
+      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `A neighboring building rises ${H} m above a window sill, at a horizontal distance of ${D} m. What is the obstruction angle perpendicular to its face?`,
         solution: eq(`ALT<sub>obs</sub> = arctan(H / D) = arctan(${H} / ${D}) = ${n(a, 1)}°`) + '<p>Whenever the sun is lower than this (within the azimuth range of the building), the sill is shaded.</p>' };
     }),
     numeric('Section 03 · Eq. 16, 17', '°', 0.5, first => {

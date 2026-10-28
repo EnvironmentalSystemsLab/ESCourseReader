@@ -4,7 +4,7 @@
 const modules = [];
 // solar.js
 modules[1] = (() => {
-/** Geometric solar model for the course reader. Degrees, metres, minutes, solar hours.
+/** Geometric solar model for the course reader. Degrees, meters, minutes, solar hours.
  * The equations follow Szokolay, Method sheet M.1.1:
  *   DEC  Cooper (1969):  DEC = 23.45 sin[360/365 (284 + NDY)]
  *   EOT  Spencer (1971), as in Duffie & Beckman: B = (NDY - 1) 360/365
@@ -194,7 +194,7 @@ function polygonsOverlap(a, b) {
   }
   return true;
 }
-/** Massing study (default: Ithaca, March 21). The neighbours lie north of the proposed building. */
+/** Massing study (default: Ithaca, March 21). The neighbors lie north of the proposed building. */
 function massingStudy(height = 6, gap = 3, solarHour = 12, day = 80, latitude = 42.4) {
   const sun = solarPosition(latitude, day, solarHour);
   const wings = [{ x: -3, y: 0, w: 3, d: 6, h: 3 }, { x: 0, y: 0, w: 3, d: 6, h: height }];
@@ -384,7 +384,7 @@ modules[5] = (() => {
 // Ink kit for the Chapter 02 drawings: the same drawing calls as svg.js, rendered in the
 // fine-liner manner of the hand-drawing figures (src/sketch.js). Surfaces stay white, shade and
 // shadow become hatching, grids become light pencil, and straight ink edges run slightly past
-// their corners as if ruled by hand. Angle colours (ALT, AZI, ZEN) are kept as coloured pencil.
+// their corners as if ruled by hand. Angle colors (ALT, AZI, ZEN) are kept as colored pencil.
 const { kit, f, LINE } = modules[3];
 
 /** Pen widths shared with sketch.js, taken from the common line weights (drawing units). */
@@ -420,7 +420,7 @@ function inkKit(standalone = false, prefix = 'd', options = {}) {
     if (INK.includes(r)) return { ...o, stroke: c.ink, width: Math.max(PEN.hatch, o.width ?? 1), arrow: o.arrow ? 'ink' : undefined };
     return o;
   };
-  /** Fill mapped to paper or hatching; data colours and warnings are kept. */
+  /** Fill mapped to paper or hatching; data colors and warnings are kept. */
   const fill = color => {
     const r = roleOf(color);
     if (r in ROLE_FILL) return H[ROLE_FILL[r]];
@@ -515,7 +515,7 @@ const sunVector = (alt, azi) => ({ x: sind(azi) * cosd(alt), y: cosd(azi) * cosd
 
 /* ── Shadow geometry ──────────────────────────────────────────────────────── */
 
-/** Axis-aligned box: x (east), y (north), z (up) ranges in metres. */
+/** Axis-aligned box: x (east), y (north), z (up) ranges in meters. */
 const box = (x0, x1, y0, y1, z0, z1) => ({ x: [x0, x1], y: [y0, y1], z: [z0, z1] });
 const corners = b => b.x.flatMap(x => b.y.flatMap(y => b.z.map(z => ({ x, y, z }))));
 /** Point in a plane's own (u, v) coordinates lifted back to 3D. */
@@ -970,7 +970,7 @@ function figSketchPlan(standalone = false, day = 80, hour = 10) {
       sc2 += p.line({ x: tip.x, y: o2.y + 4 }, { x: tip.x, y: y + 2 }, { w: .6, color: c.muted, bow: 0 }) + p.line({ x: tip.x, y }, { x: o2.x, y }, { w: .9, color: c.azi, bow: 0 }) + k.label(tip.x - 6, y + 4, `${h} m → ${(h * F).toFixed(1)} m`, { size: 11.5, fill: c.azi, weight: 650, anchor: 'end' });
     });
     sc2 += p.angle({ x: o2.x - 9 * F * s2, y: o2.y }, 30, 0, sun.altitude, `${sun.altitude.toFixed(1)}°`, c.alt, { offset: 16 });
-    sc2 += k.text(560, 450, `Each metre of height casts ${F.toFixed(2)} m of shadow (1 / tan ALT).`, { size: 11.5 }) + k.text(560, 466, 'Take lengths off with dividers; lay them along the bearing.', { size: 11.5 });
+    sc2 += k.text(560, 450, `Each meter of height casts ${F.toFixed(2)} m of shadow (1 / tan ALT).`, { size: 11.5 }) + k.text(560, 466, 'Take lengths off with dividers; lay them along the bearing.', { size: 11.5 });
     body += k.group('shadow-scale', sc2);
   }
   body += k.text(30, 540, 'Shadow of block A (+9 m) falls partly on the roof of block B (+3 m): there the shadow only needs the height difference, 6 m × ' + F.toFixed(2) + '.', { size: 11.5 });
@@ -1189,7 +1189,7 @@ function fitView(psi, eps, pts, box) {
   const s = Math.min(box.w / (maxx - minx || 1), box.h / (maxy - miny || 1));
   return view(psi, eps, s, box.x + (box.w - (maxx - minx) * s) / 2 - minx * s, box.y + (box.h - (maxy - miny) * s) / 2 - miny * s);
 }
-/** Points along the arc between two 3D directions u and v, centred at Q. */
+/** Points along the arc between two 3D directions u and v, centered at Q. */
 function arc3(v, Q, u, w, r, n = 24) {
   const norm = a => { const l = Math.hypot(...a) || 1; return a.map(x => x / l); };
   const a = norm(u), b = norm(w), dot = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), om = Math.acos(dot);
@@ -1239,7 +1239,7 @@ function drawSky(state, { standalone = false, title } = {}) {
     angles += k.circle(v(0, 0, 0), 2.5, { fill: c.ink });
   } else angles += k.text(360, 70, 'Sun below the horizon (ALT < 0°)', { size: 16, fill: c.ink, anchor: 'middle' });
   let notes = k.text(24, 452, `${latLabel(state.latitude)} · ${calendarDate(state.day)} · ${formatHour(state.hour)} solar time`, { size: 12 });
-  notes += k.text(696, 452, 'Observer at centre · not to scale', { size: 11, anchor: 'end' });
+  notes += k.text(696, 452, 'Observer at center · not to scale', { size: 11, anchor: 'end' });
   return svgDocument(k, { width: 720, height: 470, title: title ?? 'Sky hemisphere with solar altitude, azimuth and zenith angle', body: k.group('ground', ground) + k.group('sky-grid', dome) + k.group('compass', compass) + k.group('building', building) + k.group('sun-path', path) + k.group('angles', angles) + k.group('notes', notes) });
 }
 
@@ -1430,7 +1430,7 @@ function drawSundial(latitude, sun = null, { standalone = false, peg = 25, minAl
   let cur = '';
   if (sun && sun.aboveHorizon) { const t = sundialTip(peg, sun); const q = T(t); const inside = q.x > 0 && q.x < W && q.y > 0 && q.y < H; cur += k.line(O, inside ? q : { x: O.x + (q.x - O.x) * .2, y: O.y + (q.y - O.y) * .2 }, { stroke: c.ink, width: 1.2 }); if (inside) cur += k.circle(q, 2, { fill: c.sun, stroke: c.alt, width: .6 }); else cur += k.text(O.x, O.y - 6, 'Shadow tip outside the chart', { size: 3, anchor: 'middle', fill: c.red }); }
   const title = `Horizontal sundial for model testing at ${latLabel(latitude)}`, body = k.group('frame', grid) + k.group('date-and-hour-lines', lines) + k.group('peg-and-scale', pegG) + k.group('current-shadow', cur);
-  // The printable file keeps its true millimetre size. On the page the dial sits centred in a
+  // The printable file keeps its true millimeter size. On the page the dial sits centered in a
   // fixed frame, so the panel does not change size when the latitude changes the dial's extent.
   if (standalone) return svgDocument(k, { width: W, height: H, scale: 1, title, body });
   const FW = 240, FH = 186;
@@ -1493,7 +1493,7 @@ function drawSunPath(state, { standalone = false, face = null, device = null, co
       current += k.circle(p, 13, { fill: c.paper, fillOpacity: .85 }) + k.circle(p, 8, { fill: blocked ? c.red : c.sun, stroke: blocked ? c.red : c.alt, width: 1.5 });
     }
   }
-  let notes = k.text(24, 588, `${latLabel(state.latitude)} · stereographic · solar time`, { size: 11 }) + k.text(776, 588, 'Centre = zenith · outer circle = horizon', { size: 11, anchor: 'end' });
+  let notes = k.text(24, 588, `${latLabel(state.latitude)} · stereographic · solar time`, { size: 11 }) + k.text(776, 588, 'Center = zenith · outer circle = horizon', { size: 11, anchor: 'end' });
   return svgDocument(k, { width: 800, height: 600, title: title ?? `Stereographic sun-path diagram, ${latLabel(state.latitude)}`, body: k.group('grid', grid) + k.group('masks', masks) + k.group('sun-paths', lines) + k.group('current-sun', current) + k.group('notes', notes) });
 }
 function drawCylindrical(state, { standalone = false, face = null } = {}) {
@@ -1526,7 +1526,7 @@ function drawMaskScene(face, state, { standalone = false } = {}) {
   const corners = [W(x1, D, 0), W(x2, D, 0), W(x2, Dd, 0), W(x1, Dd, 0)];
   const v = fitView(B + 245, 18, [...corners, ...corners.map(p => [p[0], p[1], H]), [0, 0, 0], W(0, -4, 0)], { x: 30, y: 30, w: 580, h: 300 });
   let scene = k.polygon([W(-6, -6, 0), W(-6, Dd + 6, 0), W(6, Dd + 6, 0), W(6, -6, 0)].map(p => v(...p)), { fill: 'none' });
-  // The neighbour in its own frame (x along the face, y away from the observer), shaded by the current sun.
+  // The neighbor in its own frame (x along the face, y away from the observer), shaded by the current sun.
   const sun = solarPosition(state.latitude, state.day, state.hour);
   const local = d => [d[0] * lat[0] + d[1] * lat[1], d[0] * fw[0] + d[1] * fw[1], d[2]];
   const [sx, sy, sz] = local([sun.east, sun.north, sun.up]);
@@ -1541,7 +1541,7 @@ function drawMaskScene(face, state, { standalone = false } = {}) {
   geo += k.polyline(a, { stroke: c.alt, width: 2.2 }) + k.label(a[12].x + 8, a[12].y - 4, `ALT_obs = ${deg(Math.atan2(H, D) / RAD)}`, { size: 12, fill: c.alt, weight: 700 });
   geo += k.circle(O, 5, { fill: c.ink }) + k.label(O.x - 8, O.y + 18, 'Observation point', { size: 12, fill: c.ink, anchor: 'end' });
   if (sun.aboveHorizon) { const L = Math.min(D, 10) * .55, blocked = isMasked(sun, face); geo += k.line(v(sun.east * L, sun.north * L, sun.up * L), O, { stroke: blocked ? c.red : c.sun, width: 2.4, arrow: blocked ? 'red' : 'alt' }); const sp = v(sun.east * L, sun.north * L, sun.up * L); geo += k.circle(sp, 8, { fill: c.sun, stroke: c.alt }) + k.label(sp.x + 12, sp.y, blocked ? 'Sun blocked' : 'Sun visible', { size: 12, fill: blocked ? c.red : c.ink, weight: 600 }); }
-  return svgDocument(k, { width: 640, height: 360, title: 'Obstruction angle from an observation point to a neighbouring building', body: k.group('building', building) + k.group('geometry', geo) });
+  return svgDocument(k, { width: 640, height: 360, title: 'Obstruction angle from an observation point to a neighboring building', body: k.group('building', building) + k.group('geometry', geo) });
 }
 
 /* ---------- 11 · Profile angle construction ---------- */
@@ -1679,7 +1679,7 @@ function drawMassing(model, { standalone = false } = {}) {
   for (const [i, n] of study.neighbors.entries()) { blocks += k.polygon(rect(n), study.hit[i] ? { fill: c.overlap, stroke: c.red, width: PEN.outline } : { fill: c.paper, stroke: c.ink, width: PEN.edge }); const q = p(n.x + 3, n.y + 3); blocks += k.text(q.x, q.y + 4, `N${i + 1}`, { anchor: 'middle', fill: study.hit[i] ? c.red : c.ink }); }
   for (const b of study.wings) { blocks += k.polygon(rect(b), { fill: c.paper, stroke: c.ink, width: PEN.profile }); const q = p(b.x + 1.5, 3); blocks += k.text(q.x, q.y + 5, `${b.h} m`, { anchor: 'middle', size: 15, weight: 600, fill: c.ink }); }
   let ann = k.line(p(5.2, 6), p(5.2, 6 + model.gap), { stroke: c.azi }) + k.text(p(5.2, 6).x + 8, p(5.2, 6 + model.gap / 2).y + 4, `${model.gap} m gap`, { size: 11 });
-  ann += k.title(30, 35, `${formatHour(model.hour)} solar time · ${latLabel(latitude)} · ${calendarDate(day)}`) + k.text(30, 56, !study.sun.aboveHorizon ? 'Sun below the horizon' : study.clear ? 'Current shadow: clear of neighbours' : 'Current shadow: overlaps a neighbour', { size: 11 });
+  ann += k.title(30, 35, `${formatHour(model.hour)} solar time · ${latLabel(latitude)} · ${calendarDate(day)}`) + k.text(30, 56, !study.sun.aboveHorizon ? 'Sun below the horizon' : study.clear ? 'Current shadow: clear of neighbors' : 'Current shadow: overlaps a neighbor', { size: 11 });
   const north = { x: 660, y: 120 }; ann += k.line({ x: north.x, y: north.y + 35 }, north, { stroke: c.ink, width: 1.8, arrow: 'ink' }) + k.text(north.x, north.y - 8, 'N', { size: 16, weight: 700, anchor: 'middle', fill: c.ink });
   if (model.showAll) ann += k.line({ x: 30, y: 420 }, { x: 58, y: 420 }, { stroke: c.ink, width: PEN.hatch, dash: '3 3' }) + k.text(64, 424, 'Shadows at 10:00–14:00 solar time (hour at the tip)', { size: 10 });
   return svgDocument(k, { width: 720, height: 470, title: `Massing shadow study, ${latLabel(latitude)}, ${calendarDate(day)}`, body: k.group('grid', grid) + k.group('shadows', shadows) + k.group('buildings', blocks) + k.group('annotations', ann) });
@@ -1750,12 +1750,12 @@ function shadingQuizQuestions() {
   return [
     numeric('Section 01 · Eq. 14', '°', 0.5, first => {
       const r = first ? 0.5 : between(.15, .9, .05), a = 90 - 2 * Math.atan(r) / RAD;
-      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `On a stereographic chart of radius R, a sun position lies at r = ${n(r, 2)} R from the centre. What is its altitude?`,
+      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `On a stereographic chart of radius R, a sun position lies at r = ${n(r, 2)} R from the center. What is its altitude?`,
         solution: eq(`r/R = tan(ZEN/2) → ZEN = 2 × arctan(${n(r, 2)}) = ${n(90 - a, 1)}°`) + eq(`ALT = 90° − ZEN = ${n(a, 1)}°`) + '<p>Not 45°: altitude rings are not equally spaced.</p>' };
     }),
     numeric('Section 02 · Eq. 15', '°', 0.5, first => {
       const H = first ? 12 : between(4, 40), D = first ? 20 : between(6, 60), a = Math.atan(H / D) / RAD;
-      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `A neighbouring building rises ${H} m above a window sill, at a horizontal distance of ${D} m. What is the obstruction angle perpendicular to its face?`,
+      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `A neighboring building rises ${H} m above a window sill, at a horizontal distance of ${D} m. What is the obstruction angle perpendicular to its face?`,
         solution: eq(`ALT<sub>obs</sub> = arctan(H / D) = arctan(${H} / ${D}) = ${n(a, 1)}°`) + '<p>Whenever the sun is lower than this (within the azimuth range of the building), the sill is shaded.</p>' };
     }),
     numeric('Section 03 · Eq. 16, 17', '°', 0.5, first => {
@@ -2176,7 +2176,7 @@ function coordGlobe(k, site) {
   return g;
 }
 
-/* C: meridian section — latitude is an angle at the centre, north–south. */
+/* C: meridian section — latitude is an angle at the center, north–south. */
 function coordSection(k, site) {
   const c = k.c, lat = site.latitude, B = { x: 812, y: 304 }, r = 44;
   let g = k.title(758, 246, 'C · Latitude') + k.circle(B, r, { fill: c.earth, stroke: c.buildingEdge, width: 1.3 });
@@ -2586,7 +2586,7 @@ function renderTimeZones(st) {
   ]);
 }
 
-const metres = (d = 1) => v => `${Number(v).toFixed(d)} m`;
+const meters = (d = 1) => v => `${Number(v).toFixed(d)} m`;
 const coordSite = st => ({ ...st, name: COORD_SITES.find(([, s]) => Math.abs(s.latitude - st.latitude) < .05 && Math.abs(s.longitude - st.longitude) < .05)?.[2] });
 const LABS = [
   { id: 'coordinates', state: { latitude: 42.4, longitude: 76.5 },
@@ -2622,19 +2622,19 @@ const LABS = [
     render: renderSunPath, save: st => drawSunPath(st, { standalone: true, construction: st.construction }) },
   { id: 'cylindrical', state: { latitude: 42.4, day: 80, hour: 10 }, inputs: [LAT, DAY, HOUR], render: st => host('d-cylindrical', drawCylindrical(st)), save: st => drawCylindrical(st, { standalone: true }) },
   { id: 'mask', state: { latitude: 42.4, day: 355, hour: 12, bearing: 180, height: 9, distance: 12, width: 30, offset: 0 },
-    inputs: [{ type: 'select', key: 'bearing', label: 'Direction of the building', options: ORIENTATIONS.filter(([o]) => o !== 0) }, range('height', 'H above the point', 0, 40, 0.5, metres()), range('distance', 'Distance D', 3, 60, 0.5, metres()),
-      range('width', 'Width', 4, 120, 1, metres(0)), range('offset', 'Lateral offset', -40, 40, 1, metres(0)), LAT, DAY, HOUR],
+    inputs: [{ type: 'select', key: 'bearing', label: 'Direction of the building', options: ORIENTATIONS.filter(([o]) => o !== 0) }, range('height', 'H above the point', 0, 40, 0.5, meters()), range('distance', 'Distance D', 3, 60, 0.5, meters()),
+      range('width', 'Width', 4, 120, 1, meters(0)), range('offset', 'Lateral offset', -40, 40, 1, meters(0)), LAT, DAY, HOUR],
     render: renderMask, save: (st, name) => { const face = { bearing: st.bearing, height: st.height, distance: st.distance, width: st.width, offset: st.offset }; return name === 'maskscene' ? drawMaskScene(face, st, { standalone: true }) : drawSunPath(st, { standalone: true, face }); } },
   { id: 'profile', state: { latitude: 42.4, day: 264, hour: 12, ori: 180, depth: 0.8, fin: 0 },
-    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, metres(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, metres(2)), LAT, DAY, HOUR,
+    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, meters(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, meters(2)), LAT, DAY, HOUR,
       { type: 'presets', label: 'TEST CONDITIONS · ITHACA', buttons: [['Sep 21 noon', { latitude: 42.4, day: 264, hour: 12, ori: 180 }], ['Jun 21 noon', { latitude: 42.4, day: 172, hour: 12, ori: 180 }], ['Dec 21 noon', { latitude: 42.4, day: 355, hour: 12, ori: 180 }], ['Aug 21 16:00, W', { latitude: 42.4, day: 233, hour: 16, ori: 270 }]] }],
     render: renderProfile, save: (st, name) => (name === 'profile' ? drawProfileAxo : drawDevice)(sunOf(st), st.ori, dims(st), { standalone: true }) },
   { id: 'devicemask', state: { latitude: 42.4, day: 172, hour: 12, ori: 180, depth: 0.8, fin: 0 },
-    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, metres(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, metres(2)), LAT, DAY, HOUR],
+    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, meters(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, meters(2)), LAT, DAY, HOUR],
     render: renderDeviceMask, save: st => drawSunPath(st, { standalone: true, device: { orientation: st.ori, vsa: deviceVSA(st.depth, WINDOW.height, WINDOW.gap), hsa: deviceHSA(st.fin, WINDOW.width) } }) },
   { id: 'pole', state: { latitude: 42.4, day: 80, hour: 10 }, inputs: [LAT, DAY, HOUR], render: renderPole, save: st => drawPoleShadow(sunOf(st), { standalone: true }) },
   { id: 'massing', state: { latitude: 42.4, day: 80, height: 6, gap: 3, hour: 12, showAll: true },
-    inputs: [range('height', 'East-wing height', 3, 9, 0.25, metres(2)), range('gap', 'Gap to neighbours', 3, 10, 0.25, metres(2)), range('hour', 'Solar time', 10, 14, 0.25, formatHour),
+    inputs: [range('height', 'East-wing height', 3, 9, 0.25, meters(2)), range('gap', 'Gap to neighbors', 3, 10, 0.25, meters(2)), range('hour', 'Solar time', 10, 14, 0.25, formatHour),
       { type: 'check', key: 'showAll', label: 'Overlay the five hourly shadows' }, LAT, DAY],
     render: renderMassing, save: st => drawMassing(st, { standalone: true }) },
 ];

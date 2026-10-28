@@ -20,7 +20,7 @@ function fitView(psi, eps, pts, box) {
   const s = Math.min(box.w / (maxx - minx || 1), box.h / (maxy - miny || 1));
   return view(psi, eps, s, box.x + (box.w - (maxx - minx) * s) / 2 - minx * s, box.y + (box.h - (maxy - miny) * s) / 2 - miny * s);
 }
-/** Points along the arc between two 3D directions u and v, centred at Q. */
+/** Points along the arc between two 3D directions u and v, centered at Q. */
 function arc3(v, Q, u, w, r, n = 24) {
   const norm = a => { const l = Math.hypot(...a) || 1; return a.map(x => x / l); };
   const a = norm(u), b = norm(w), dot = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), om = Math.acos(dot);
@@ -70,7 +70,7 @@ export function drawSky(state, { standalone = false, title } = {}) {
     angles += k.circle(v(0, 0, 0), 2.5, { fill: c.ink });
   } else angles += k.text(360, 70, 'Sun below the horizon (ALT < 0°)', { size: 16, fill: c.ink, anchor: 'middle' });
   let notes = k.text(24, 452, `${latLabel(state.latitude)} · ${calendarDate(state.day)} · ${formatHour(state.hour)} solar time`, { size: 12 });
-  notes += k.text(696, 452, 'Observer at centre · not to scale', { size: 11, anchor: 'end' });
+  notes += k.text(696, 452, 'Observer at center · not to scale', { size: 11, anchor: 'end' });
   return svgDocument(k, { width: 720, height: 470, title: title ?? 'Sky hemisphere with solar altitude, azimuth and zenith angle', body: k.group('ground', ground) + k.group('sky-grid', dome) + k.group('compass', compass) + k.group('building', building) + k.group('sun-path', path) + k.group('angles', angles) + k.group('notes', notes) });
 }
 
@@ -261,7 +261,7 @@ export function drawSundial(latitude, sun = null, { standalone = false, peg = 25
   let cur = '';
   if (sun && sun.aboveHorizon) { const t = sundialTip(peg, sun); const q = T(t); const inside = q.x > 0 && q.x < W && q.y > 0 && q.y < H; cur += k.line(O, inside ? q : { x: O.x + (q.x - O.x) * .2, y: O.y + (q.y - O.y) * .2 }, { stroke: c.ink, width: 1.2 }); if (inside) cur += k.circle(q, 2, { fill: c.sun, stroke: c.alt, width: .6 }); else cur += k.text(O.x, O.y - 6, 'Shadow tip outside the chart', { size: 3, anchor: 'middle', fill: c.red }); }
   const title = `Horizontal sundial for model testing at ${latLabel(latitude)}`, body = k.group('frame', grid) + k.group('date-and-hour-lines', lines) + k.group('peg-and-scale', pegG) + k.group('current-shadow', cur);
-  // The printable file keeps its true millimetre size. On the page the dial sits centred in a
+  // The printable file keeps its true millimeter size. On the page the dial sits centered in a
   // fixed frame, so the panel does not change size when the latitude changes the dial's extent.
   if (standalone) return svgDocument(k, { width: W, height: H, scale: 1, title, body });
   const FW = 240, FH = 186;
@@ -324,7 +324,7 @@ export function drawSunPath(state, { standalone = false, face = null, device = n
       current += k.circle(p, 13, { fill: c.paper, fillOpacity: .85 }) + k.circle(p, 8, { fill: blocked ? c.red : c.sun, stroke: blocked ? c.red : c.alt, width: 1.5 });
     }
   }
-  let notes = k.text(24, 588, `${latLabel(state.latitude)} · stereographic · solar time`, { size: 11 }) + k.text(776, 588, 'Centre = zenith · outer circle = horizon', { size: 11, anchor: 'end' });
+  let notes = k.text(24, 588, `${latLabel(state.latitude)} · stereographic · solar time`, { size: 11 }) + k.text(776, 588, 'Center = zenith · outer circle = horizon', { size: 11, anchor: 'end' });
   return svgDocument(k, { width: 800, height: 600, title: title ?? `Stereographic sun-path diagram, ${latLabel(state.latitude)}`, body: k.group('grid', grid) + k.group('masks', masks) + k.group('sun-paths', lines) + k.group('current-sun', current) + k.group('notes', notes) });
 }
 export function drawCylindrical(state, { standalone = false, face = null } = {}) {
@@ -357,7 +357,7 @@ export function drawMaskScene(face, state, { standalone = false } = {}) {
   const corners = [W(x1, D, 0), W(x2, D, 0), W(x2, Dd, 0), W(x1, Dd, 0)];
   const v = fitView(B + 245, 18, [...corners, ...corners.map(p => [p[0], p[1], H]), [0, 0, 0], W(0, -4, 0)], { x: 30, y: 30, w: 580, h: 300 });
   let scene = k.polygon([W(-6, -6, 0), W(-6, Dd + 6, 0), W(6, Dd + 6, 0), W(6, -6, 0)].map(p => v(...p)), { fill: 'none' });
-  // The neighbour in its own frame (x along the face, y away from the observer), shaded by the current sun.
+  // The neighbor in its own frame (x along the face, y away from the observer), shaded by the current sun.
   const sun = solarPosition(state.latitude, state.day, state.hour);
   const local = d => [d[0] * lat[0] + d[1] * lat[1], d[0] * fw[0] + d[1] * fw[1], d[2]];
   const [sx, sy, sz] = local([sun.east, sun.north, sun.up]);
@@ -372,7 +372,7 @@ export function drawMaskScene(face, state, { standalone = false } = {}) {
   geo += k.polyline(a, { stroke: c.alt, width: 2.2 }) + k.label(a[12].x + 8, a[12].y - 4, `ALT_obs = ${deg(Math.atan2(H, D) / RAD)}`, { size: 12, fill: c.alt, weight: 700 });
   geo += k.circle(O, 5, { fill: c.ink }) + k.label(O.x - 8, O.y + 18, 'Observation point', { size: 12, fill: c.ink, anchor: 'end' });
   if (sun.aboveHorizon) { const L = Math.min(D, 10) * .55, blocked = isMasked(sun, face); geo += k.line(v(sun.east * L, sun.north * L, sun.up * L), O, { stroke: blocked ? c.red : c.sun, width: 2.4, arrow: blocked ? 'red' : 'alt' }); const sp = v(sun.east * L, sun.north * L, sun.up * L); geo += k.circle(sp, 8, { fill: c.sun, stroke: c.alt }) + k.label(sp.x + 12, sp.y, blocked ? 'Sun blocked' : 'Sun visible', { size: 12, fill: blocked ? c.red : c.ink, weight: 600 }); }
-  return svgDocument(k, { width: 640, height: 360, title: 'Obstruction angle from an observation point to a neighbouring building', body: k.group('building', building) + k.group('geometry', geo) });
+  return svgDocument(k, { width: 640, height: 360, title: 'Obstruction angle from an observation point to a neighboring building', body: k.group('building', building) + k.group('geometry', geo) });
 }
 
 /* ---------- 11 · Profile angle construction ---------- */
@@ -510,7 +510,7 @@ export function drawMassing(model, { standalone = false } = {}) {
   for (const [i, n] of study.neighbors.entries()) { blocks += k.polygon(rect(n), study.hit[i] ? { fill: c.overlap, stroke: c.red, width: PEN.outline } : { fill: c.paper, stroke: c.ink, width: PEN.edge }); const q = p(n.x + 3, n.y + 3); blocks += k.text(q.x, q.y + 4, `N${i + 1}`, { anchor: 'middle', fill: study.hit[i] ? c.red : c.ink }); }
   for (const b of study.wings) { blocks += k.polygon(rect(b), { fill: c.paper, stroke: c.ink, width: PEN.profile }); const q = p(b.x + 1.5, 3); blocks += k.text(q.x, q.y + 5, `${b.h} m`, { anchor: 'middle', size: 15, weight: 600, fill: c.ink }); }
   let ann = k.line(p(5.2, 6), p(5.2, 6 + model.gap), { stroke: c.azi }) + k.text(p(5.2, 6).x + 8, p(5.2, 6 + model.gap / 2).y + 4, `${model.gap} m gap`, { size: 11 });
-  ann += k.title(30, 35, `${formatHour(model.hour)} solar time · ${latLabel(latitude)} · ${calendarDate(day)}`) + k.text(30, 56, !study.sun.aboveHorizon ? 'Sun below the horizon' : study.clear ? 'Current shadow: clear of neighbours' : 'Current shadow: overlaps a neighbour', { size: 11 });
+  ann += k.title(30, 35, `${formatHour(model.hour)} solar time · ${latLabel(latitude)} · ${calendarDate(day)}`) + k.text(30, 56, !study.sun.aboveHorizon ? 'Sun below the horizon' : study.clear ? 'Current shadow: clear of neighbors' : 'Current shadow: overlaps a neighbor', { size: 11 });
   const north = { x: 660, y: 120 }; ann += k.line({ x: north.x, y: north.y + 35 }, north, { stroke: c.ink, width: 1.8, arrow: 'ink' }) + k.text(north.x, north.y - 8, 'N', { size: 16, weight: 700, anchor: 'middle', fill: c.ink });
   if (model.showAll) ann += k.line({ x: 30, y: 420 }, { x: 58, y: 420 }, { stroke: c.ink, width: PEN.hatch, dash: '3 3' }) + k.text(64, 424, 'Shadows at 10:00–14:00 solar time (hour at the tip)', { size: 10 });
   return svgDocument(k, { width: 720, height: 470, title: `Massing shadow study, ${latLabel(latitude)}, ${calendarDate(day)}`, body: k.group('grid', grid) + k.group('shadows', shadows) + k.group('buildings', blocks) + k.group('annotations', ann) });

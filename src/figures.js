@@ -68,7 +68,7 @@ export function figStereoConstruction(standalone = false) {
     g += k.line(N, p, { stroke: c.alt, width: .9, opacity: .8 }) + k.circle(p, 3, { fill: c.alt }) + k.circle(q, 3, { fill: c.third });
     g += k.label(p.x + 6, p.y - 4, `${alt}°`, { size: 11, fill: c.alt });
   }
-  g += k.circle({ x: O.x, y: O.y - R }, 3, { fill: c.ink }) + k.label(O.x + 6, O.y - R - 6, 'Zenith → centre', { size: 11, fill: c.ink });
+  g += k.circle({ x: O.x, y: O.y - R }, 3, { fill: c.ink }) + k.label(O.x + 6, O.y - R - 6, 'Zenith → center', { size: 11, fill: c.ink });
   g += k.text(30, 30, 'Section: points on the sky dome are projected toward the nadir.', { size: 12, fill: c.ink });
   let plan = '';
   const P = { x: 640, y: 200 };
@@ -124,10 +124,10 @@ export function figDeviceTypes(standalone = false) {
     s += k.line(loc(0, 90), loc(0, 270), { stroke: c.ink, width: 2 }) + k.text(cx, cy + R + 16, 'S', { size: 12, anchor: 'middle', fill: c.ink, weight: 700 }) + k.text(cx, cy - R - 6, 'N', { size: 12, anchor: 'middle', fill: c.ink, weight: 700 });
     return s;
   };
-  let a = k.title(130, 30, 'Horizontal device', { anchor: 'middle' }) + k.text(130, 48, 'characterised by VSA · segmental mask', { size: 11, anchor: 'middle' });
+  let a = k.title(130, 30, 'Horizontal device', { anchor: 'middle' }) + k.text(130, 48, 'characterized by VSA · segmental mask', { size: 11, anchor: 'middle' });
   a += k.rect(60, 70, 10, 90, { fill: c.wall }) + k.rect(60, 70, 80, 7, { fill: c.canopy }) + k.line({ x: 70, y: 160 }, { x: 140, y: 77 }, { stroke: c.muted, dash: '4 3' }) + k.arc(70, 160, 30, 0, 50, { stroke: c.alt, width: 2 }) + k.label(104, 150, 'VSA 50°', { size: 11, fill: c.alt, weight: 700 });
   a += chart(130, 310, 50, 0);
-  let b = k.title(390, 30, 'Vertical fins', { anchor: 'middle' }) + k.text(390, 48, 'characterised by HSA · sectoral mask', { size: 11, anchor: 'middle' });
+  let b = k.title(390, 30, 'Vertical fins', { anchor: 'middle' }) + k.text(390, 48, 'characterized by HSA · sectoral mask', { size: 11, anchor: 'middle' });
   b += k.line({ x: 330, y: 80 }, { x: 450, y: 80 }, { stroke: c.wall, width: 6 }); for (const x of [340, 390, 440]) b += k.rect(x - 2, 80, 4, 45, { fill: c.canopy });
   b += k.line({ x: 390, y: 80 }, { x: 435, y: 125 }, { stroke: c.muted, dash: '4 3' }) + k.label(420, 150, 'HSA 45°', { size: 11, fill: c.azi, weight: 700 }) + k.text(330, 72, 'plan', { size: 10 });
   b += chart(390, 310, 0, 45);

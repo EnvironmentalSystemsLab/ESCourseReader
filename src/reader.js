@@ -194,7 +194,7 @@ function renderTimeZones(st) {
   ]);
 }
 
-const metres = (d = 1) => v => `${Number(v).toFixed(d)} m`;
+const meters = (d = 1) => v => `${Number(v).toFixed(d)} m`;
 const coordSite = st => ({ ...st, name: COORD_SITES.find(([, s]) => Math.abs(s.latitude - st.latitude) < .05 && Math.abs(s.longitude - st.longitude) < .05)?.[2] });
 const LABS = [
   { id: 'coordinates', state: { latitude: 42.4, longitude: 76.5 },
@@ -230,19 +230,19 @@ const LABS = [
     render: renderSunPath, save: st => drawSunPath(st, { standalone: true, construction: st.construction }) },
   { id: 'cylindrical', state: { latitude: 42.4, day: 80, hour: 10 }, inputs: [LAT, DAY, HOUR], render: st => host('d-cylindrical', drawCylindrical(st)), save: st => drawCylindrical(st, { standalone: true }) },
   { id: 'mask', state: { latitude: 42.4, day: 355, hour: 12, bearing: 180, height: 9, distance: 12, width: 30, offset: 0 },
-    inputs: [{ type: 'select', key: 'bearing', label: 'Direction of the building', options: ORIENTATIONS.filter(([o]) => o !== 0) }, range('height', 'H above the point', 0, 40, 0.5, metres()), range('distance', 'Distance D', 3, 60, 0.5, metres()),
-      range('width', 'Width', 4, 120, 1, metres(0)), range('offset', 'Lateral offset', -40, 40, 1, metres(0)), LAT, DAY, HOUR],
+    inputs: [{ type: 'select', key: 'bearing', label: 'Direction of the building', options: ORIENTATIONS.filter(([o]) => o !== 0) }, range('height', 'H above the point', 0, 40, 0.5, meters()), range('distance', 'Distance D', 3, 60, 0.5, meters()),
+      range('width', 'Width', 4, 120, 1, meters(0)), range('offset', 'Lateral offset', -40, 40, 1, meters(0)), LAT, DAY, HOUR],
     render: renderMask, save: (st, name) => { const face = { bearing: st.bearing, height: st.height, distance: st.distance, width: st.width, offset: st.offset }; return name === 'maskscene' ? drawMaskScene(face, st, { standalone: true }) : drawSunPath(st, { standalone: true, face }); } },
   { id: 'profile', state: { latitude: 42.4, day: 264, hour: 12, ori: 180, depth: 0.8, fin: 0 },
-    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, metres(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, metres(2)), LAT, DAY, HOUR,
+    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, meters(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, meters(2)), LAT, DAY, HOUR,
       { type: 'presets', label: 'TEST CONDITIONS · ITHACA', buttons: [['Sep 21 noon', { latitude: 42.4, day: 264, hour: 12, ori: 180 }], ['Jun 21 noon', { latitude: 42.4, day: 172, hour: 12, ori: 180 }], ['Dec 21 noon', { latitude: 42.4, day: 355, hour: 12, ori: 180 }], ['Aug 21 16:00, W', { latitude: 42.4, day: 233, hour: 16, ori: 270 }]] }],
     render: renderProfile, save: (st, name) => (name === 'profile' ? drawProfileAxo : drawDevice)(sunOf(st), st.ori, dims(st), { standalone: true }) },
   { id: 'devicemask', state: { latitude: 42.4, day: 172, hour: 12, ori: 180, depth: 0.8, fin: 0 },
-    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, metres(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, metres(2)), LAT, DAY, HOUR],
+    inputs: [{ type: 'select', key: 'ori', label: 'Facade orientation ORI', options: ORIENTATIONS }, range('depth', 'Overhang depth D', 0, 2.5, 0.05, meters(2)), range('fin', 'Fin depth d', 0, 1.5, 0.05, meters(2)), LAT, DAY, HOUR],
     render: renderDeviceMask, save: st => drawSunPath(st, { standalone: true, device: { orientation: st.ori, vsa: deviceVSA(st.depth, WINDOW.height, WINDOW.gap), hsa: deviceHSA(st.fin, WINDOW.width) } }) },
   { id: 'pole', state: { latitude: 42.4, day: 80, hour: 10 }, inputs: [LAT, DAY, HOUR], render: renderPole, save: st => drawPoleShadow(sunOf(st), { standalone: true }) },
   { id: 'massing', state: { latitude: 42.4, day: 80, height: 6, gap: 3, hour: 12, showAll: true },
-    inputs: [range('height', 'East-wing height', 3, 9, 0.25, metres(2)), range('gap', 'Gap to neighbours', 3, 10, 0.25, metres(2)), range('hour', 'Solar time', 10, 14, 0.25, formatHour),
+    inputs: [range('height', 'East-wing height', 3, 9, 0.25, meters(2)), range('gap', 'Gap to neighbors', 3, 10, 0.25, meters(2)), range('hour', 'Solar time', 10, 14, 0.25, formatHour),
       { type: 'check', key: 'showAll', label: 'Overlay the five hourly shadows' }, LAT, DAY],
     render: renderMassing, save: st => drawMassing(st, { standalone: true }) },
 ];

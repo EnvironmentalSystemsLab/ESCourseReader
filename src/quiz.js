@@ -58,12 +58,12 @@ export function shadingQuizQuestions() {
   return [
     numeric('Section 01 · Eq. 14', '°', 0.5, first => {
       const r = first ? 0.5 : between(.15, .9, .05), a = 90 - 2 * Math.atan(r) / RAD;
-      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `On a stereographic chart of radius R, a sun position lies at r = ${n(r, 2)} R from the centre. What is its altitude?`,
+      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `On a stereographic chart of radius R, a sun position lies at r = ${n(r, 2)} R from the center. What is its altitude?`,
         solution: eq(`r/R = tan(ZEN/2) → ZEN = 2 × arctan(${n(r, 2)}) = ${n(90 - a, 1)}°`) + eq(`ALT = 90° − ZEN = ${n(a, 1)}°`) + '<p>Not 45°: altitude rings are not equally spaced.</p>' };
     }),
     numeric('Section 02 · Eq. 15', '°', 0.5, first => {
       const H = first ? 12 : between(4, 40), D = first ? 20 : between(6, 60), a = Math.atan(H / D) / RAD;
-      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `A neighbouring building rises ${H} m above a window sill, at a horizontal distance of ${D} m. What is the obstruction angle perpendicular to its face?`,
+      return { answer: a, answerText: `${n(a, 1)}°`, prompt: `A neighboring building rises ${H} m above a window sill, at a horizontal distance of ${D} m. What is the obstruction angle perpendicular to its face?`,
         solution: eq(`ALT<sub>obs</sub> = arctan(H / D) = arctan(${H} / ${D}) = ${n(a, 1)}°`) + '<p>Whenever the sun is lower than this (within the azimuth range of the building), the sill is shaded.</p>' };
     }),
     numeric('Section 03 · Eq. 16, 17', '°', 0.5, first => {

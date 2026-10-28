@@ -5,7 +5,7 @@
  *   Eq. 7.2  Fourier, plane layer    q = λ ΔT / d
  *   Eq. 7.3  layer resistance        R = d / λ,  q = ΔT / R
  *   Eq. 7.4  convection (Newton)     q = h_c (T_s − T_air)
- *   Eq. 7.5  radiation, linearised   q = ε σ (T_s⁴ − T_sur⁴) ≈ h_r (T_s − T_sur),  h_r = 4 ε σ T_m³
+ *   Eq. 7.5  radiation, linearized   q = ε σ (T_s⁴ − T_sur⁴) ≈ h_r (T_s − T_sur),  h_r = 4 ε σ T_m³
  *   Eq. 7.6  surface resistance      R_s = 1 / (h_c + h_r)
  *   Eq. 7.7  total resistance        R_T = R_si + Σ d_j / λ_j + R_se,  U = 1 / R_T
  *   Eq. 7.8  heat flow               Φ = U A ΔT,  Q = Φ t
@@ -28,9 +28,9 @@ export const sensibleHeat = (mass, specificHeat, deltaT) => mass * specificHeat 
 /** Eq. 7.3 — resistance of a homogeneous layer, m²K/W. */
 export const layerResistance = (thickness, conductivity) => thickness / conductivity;
 
-/** Eq. 7.5 — linearised radiation coefficient of a black body at mean temperature T_m (°C), W/(m²K). */
+/** Eq. 7.5 — linearized radiation coefficient of a black body at mean temperature T_m (°C), W/(m²K). */
 export const blackRadiationCoefficient = (meanTemp = 20) => 4 * SIGMA * (meanTemp + KELVIN) ** 3;
-/** Eq. 7.5 — exact net long-wave exchange of a small grey surface with large surroundings, W/m². */
+/** Eq. 7.5 — exact net long-wave exchange of a small gray surface with large surroundings, W/m². */
 export const netRadiation = (emissivity, surfaceTemp, surroundingTemp) => emissivity * SIGMA * ((surfaceTemp + KELVIN) ** 4 - (surroundingTemp + KELVIN) ** 4);
 
 /** Convection coefficients of ISO 6946 Annex C: inside by heat-flow direction, outside from the wind speed v (m/s). */
@@ -63,7 +63,7 @@ export const MATERIALS = {
   eps: { name: 'Expanded polystyrene (EPS)', lambda: 0.035, rho: 20, c: 1210, insulation: true },
   xps: { name: 'Extruded polystyrene (XPS)', lambda: 0.030, rho: 35, c: 1210, insulation: true },
   pir: { name: 'Polyisocyanurate (PIR) board', lambda: 0.023, rho: 32, c: 1400, insulation: true },
-  woodFibre: { name: 'Wood-fibre board', lambda: 0.042, rho: 160, c: 2100, insulation: true },
+  woodFibre: { name: 'Wood-fiber board', lambda: 0.042, rho: 160, c: 2100, insulation: true },
   cellulose: { name: 'Cellulose, blown', lambda: 0.040, rho: 50, c: 2000, insulation: true },
   straw: { name: 'Straw (compressed panel)', lambda: 0.052, rho: 110, c: 2000, insulation: true },
   cork: { name: 'Cork board', lambda: 0.039, rho: 120, c: 1800, insulation: true },
@@ -130,11 +130,11 @@ export function inhomogeneous(sections, { rsi = RSI.horizontal, rse = RSE } = {}
   return { upper, lower, total, U: 1 / total, error: (upper - lower) / (2 * total), parts };
 }
 
-/** Temperature factor f_Rsi = (θ_si − θ_e) / (θ_i − θ_e); DIN 4108-2 requires f_Rsi ≥ 0.70 against mould. */
+/** Temperature factor f_Rsi = (θ_si − θ_e) / (θ_i − θ_e); DIN 4108-2 requires f_Rsi ≥ 0.70 against mold. */
 export const temperatureFactor = (insideSurface, inside, outside) => (insideSurface - outside) / (inside - outside);
 export const surfaceFactorFromU = (U, rsi = 0.25) => 1 - U * rsi;
-/** Surface temperature at which the surface air reaches 80 % RH (mould criterion), °C. */
-export const mouldLimit = (temp, relativeHumidity) => dewPoint(temp, relativeHumidity * 100 / 80);
+/** Surface temperature at which the surface air reaches 80 % RH (mold criterion), °C. */
+export const moldLimit = (temp, relativeHumidity) => dewPoint(temp, relativeHumidity * 100 / 80);
 
 /** Eq. 7.12 — thermal diffusivity (m²/s) and periodic penetration depth (m) for a period in hours. */
 export const diffusivity = m => m.lambda / (m.rho * m.c);
@@ -194,8 +194,8 @@ export function degreeDays(rows, base = 18, coolingBase = base, limit = base) {
 /** Eq. 8.6 — seasonal heating energy from H (W/K) and degree days (K·d), kWh. */
 export const annualHeating = (H, hdd) => H * hdd * 24 / 1000;
 
-/** Utilisation factor of gains (ISO 13790 / DIN V 4108-6): γ = gains / losses, a = 1 + τ / 16 h. */
-export function gainUtilisation(gains, losses, tau) {
+/** Utilization factor of gains (ISO 13790 / DIN V 4108-6): γ = gains / losses, a = 1 + τ / 16 h. */
+export function gainUtilization(gains, losses, tau) {
   const g = gains / losses, a = 1 + tau / 16;
   return Math.abs(g - 1) < 1e-9 ? a / (a + 1) : (1 - g ** a) / (1 - g ** (a + 1));
 }
@@ -203,7 +203,7 @@ export function gainUtilisation(gains, losses, tau) {
 /** Window transmittance from glazing, frame and edge: U_w = (U_g A_g + U_f A_f + ψ_g l_g) / A_w (ISO 10077-1). */
 export const windowU = ({ Ug, Ag, Uf, Af, psi, edge }) => (Ug * Ag + Uf * Af + psi * edge) / (Ag + Af);
 
-/** Glazing of the lecture (centre of glass, EnergyPlus constructions). */
+/** Glazing of the lecture (center of glass, EnergyPlus constructions). */
 export const GLAZING = {
   single: { name: 'Single, clear 3 mm', U: 5.894, shgc: 0.905, tvis: 0.913 },
   double: { name: 'Double, clear, 6 mm air', U: 2.72, shgc: 0.764, tvis: 0.812 },

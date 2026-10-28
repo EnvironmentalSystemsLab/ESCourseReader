@@ -1,5 +1,5 @@
 // Chapter 07 (heat transfer through the envelope): four interactive drawings, the self-test and navigation.
-import { MATERIALS, construction, temperatureProfile, dewPoint, mouldLimit, temperatureFactor, surfaceResistance, INSIDE_CONVECTION, outsideConvection, airLayer, inhomogeneous, RSI, RSE } from './heat.js';
+import { MATERIALS, construction, temperatureProfile, dewPoint, moldLimit, temperatureFactor, surfaceResistance, INSIDE_CONVECTION, outsideConvection, airLayer, inhomogeneous, RSI, RSE } from './heat.js';
 import { drawWallProfile, drawSurface, drawAirLayer, drawStuds } from './heat-diagrams.js';
 import { heatQuizQuestions } from './heat-quiz.js';
 import { mountQuiz } from './quiz-ui.js';
@@ -28,11 +28,11 @@ function wallOf(st) {
   const c = construction(layers, { rse: def.rse ?? RSE }), p = temperatureProfile(c, st.inside, st.outside);
   // Moisture check of DIN 4108-2 / ISO 13788: R_si = 0.25 for corners and surfaces behind furniture.
   const p25 = temperatureProfile(construction(layers, { rsi: .25, rse: def.rse ?? RSE }), st.inside, st.outside);
-  return { def, c, p, p25, dew: dewPoint(st.inside, st.rh), mould: mouldLimit(st.inside, st.rh) };
+  return { def, c, p, p25, dew: dewPoint(st.inside, st.rh), mold: moldLimit(st.inside, st.rh) };
 }
-const drawWall = (st, standalone = false) => { const { def, c, p, dew, mould } = wallOf(st); return drawWallProfile({ construction: c, profile: p, inside: st.inside, outside: st.outside, dew, mould, axis: st.axis, label: def.label }, { standalone }); };
+const drawWall = (st, standalone = false) => { const { def, c, p, dew, mold } = wallOf(st); return drawWallProfile({ construction: c, profile: p, inside: st.inside, outside: st.outside, dew, mold, axis: st.axis, label: def.label }, { standalone }); };
 function renderWall(st) {
-  const { def, c, p, p25, dew, mould } = wallOf(st), t25 = p25.insideSurface, f = temperatureFactor(t25, st.inside, st.outside);
+  const { def, c, p, p25, dew, mold } = wallOf(st), t25 = p25.insideSurface, f = temperatureFactor(t25, st.inside, st.outside);
   host('d-wall', drawWall(st));
   const rows = c.layers.map((l, j) => [String(j + 1), `${l.name} · d = ${n(l.thickness * 1000, l.thickness < .02 ? 1 : 0)} mm / λ = ${n(l.lambda, 3)}`, `R = ${n(l.resistance, 3)}`]);
   calc('calc-wall', [
@@ -50,8 +50,8 @@ function renderWall(st) {
     ['θ<sub>si,0.25</sub>', 'with R<sub>si</sub> = 0.25: corners, behind furniture (DIN 4108-2)', deg(t25)],
     ['f<sub>Rsi</sub>', '(θ<sub>si,0.25</sub> − θe) / (θi − θe), required ≥ 0.70', n(f, 2), f < .7 ? 'warn' : undefined],
     ['θ<sub>dew</sub>', `room air ${st.inside} °C, ${st.rh} % RH`, deg(dew)],
-    ['θ<sub>80%</sub>', 'mould limit: 80 % RH at the surface', deg(mould)],
-    p.insideSurface < dew ? ['', 'Condensation on the inside surface', '', 'warn'] : t25 < mould ? ['', 'Corners and surfaces behind furniture fall below the mould limit at this condition', '', 'warn'] : ['', `Corner surface ${n(t25 - mould, 1)} K above the mould limit`, ''],
+    ['θ<sub>80%</sub>', 'mold limit: 80 % RH at the surface', deg(mold)],
+    p.insideSurface < dew ? ['', 'Condensation on the inside surface', '', 'warn'] : t25 < mold ? ['', 'Corners and surfaces behind furniture fall below the mold limit at this condition', '', 'warn'] : ['', `Corner surface ${n(t25 - mold, 1)} K above the mold limit`, ''],
     ...(def.note ? [['', def.note, '']] : []),
   ]);
 }
@@ -120,7 +120,7 @@ const LABS = [
   { id: 'surface', state: { side: 'inside', direction: 'horizontal', emissivity: .9, wind: 4 },
     inputs: [select('side', 'Surface', [['inside', 'Inside (room air)'], ['outside', 'Outside (wind)']]), select('direction', 'Heat flow direction (inside)', [['horizontal', 'Horizontal: walls, windows'], ['up', 'Upward: ceilings, roofs'], ['down', 'Downward: floors']]),
       range('emissivity', 'Long-wave emissivity ε', .02, .95, .01, v => n(v, 2)), range('wind', 'Wind speed v (outside)', 0, 10, .5, v => `${n(v, 1)} m/s`),
-      { type: 'presets', label: 'SURFACES', buttons: [['Painted, plaster (ε 0.9)', { emissivity: .9 }], ['Low-e coating (ε 0.05)', { emissivity: .05 }], ['Galvanised steel (ε 0.28)', { emissivity: .28 }]] }],
+      { type: 'presets', label: 'SURFACES', buttons: [['Painted, plaster (ε 0.9)', { emissivity: .9 }], ['Low-e coating (ε 0.05)', { emissivity: .05 }], ['Galvanized steel (ε 0.28)', { emissivity: .28 }]] }],
     render: renderSurface, save: st => drawSurface(st, { standalone: true }) },
   { id: 'cavity', state: { thickness: 25, direction: 'horizontal', e1: .9, e2: .9 },
     inputs: [range('thickness', 'Air layer thickness d', 0, 100, 1, v => `${v} mm`), select('direction', 'Heat flow direction', [['horizontal', 'Horizontal (wall)'], ['up', 'Upward (roof, ceiling)'], ['down', 'Downward (floor)']]),

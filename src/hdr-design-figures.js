@@ -7,7 +7,7 @@ import { inkKit as kit, PEN } from './ink.js';
 
 const RAD = Math.PI / 180;
 const lines = (k, x, y, arr, o = {}) => arr.map((t, i) => k.text(x, y + i * (o.step ?? 18), t, { size: 12, ...o })).join('');
-const ray = (k, a, b, colour, name, width = 1.4) => k.line(a, b, { stroke: colour, width, arrow: name });
+const ray = (k, a, b, color, name, width = 1.4) => k.line(a, b, { stroke: color, width, arrow: name });
 
 /** Angular (equidistant) fisheye: θ from the view direction maps linearly to the radius. */
 function fisheye(k, C, R, rings = [30, 60]) {
@@ -17,7 +17,7 @@ function fisheye(k, C, R, rings = [30, 60]) {
   g += k.line({ x: C.x - R, y: C.y }, { x: C.x + R, y: C.y }, { stroke: c.axis, dash: '3 4' }) + k.line({ x: C.x, y: C.y - R }, { x: C.x, y: C.y + R }, { stroke: c.axis, dash: '3 4' });
   return g;
 }
-/** A point in the fisheye at θ from the centre, toward screen angle φ (0 = right, 90 = up). */
+/** A point in the fisheye at θ from the center, toward screen angle φ (0 = right, 90 = up). */
 const fp = (C, R, theta, phi) => ({ x: C.x + R * theta / 90 * Math.cos(phi * RAD), y: C.y - R * theta / 90 * Math.sin(phi * RAD) });
 
 /** One-point perspective of a box room, with a window on the left wall. */
@@ -113,7 +113,7 @@ export function figUseContrast(standalone = false) {
   h += hist(60, calm, 'calm: diffuse, even', '0.25', 'narrow') + hist(200, drama, 'dramatic: sun patch, deep shade', '0.9', 'wide');
   for (let e = 0; e <= 4; e++) { const x = hx + e / 4 * hw; h += k.line({ x, y: 290 }, { x, y: 296 }, { stroke: c.ink, width: PEN.edge }) + k.text(x, 310, ['1', '10', '100', '1,000', '10,000'][e], { size: 10.5, anchor: 'middle' }); }
   h += k.text(hx + hw / 2, 328, 'L  [cd/m², log scale]', { size: 11, anchor: 'middle', fill: c.alt });
-  h += lines(k, hx, 356, ['Spatial contrast (Rockcastle and Andersen) sums luminance', 'differences between neighbouring pixels at several image', 'resolutions: high for sharp light and shadow patterns.'], { fill: c.ink });
+  h += lines(k, hx, 356, ['Spatial contrast (Rockcastle and Andersen) sums luminance', 'differences between neighboring pixels at several image', 'resolutions: high for sharp light and shadow patterns.'], { fill: c.ink });
   return svgDocument(k, { width: 980, height: 420, title: 'Contrast: luminance ratios and the spread of the log-luminance histogram', body: k.group('ratios', z) + k.group('histograms', h) });
 }
 
@@ -164,15 +164,15 @@ export function figUseReflectance(standalone = false) {
   a += k.rect(60, 180, 40, 28, { fill: c.paper, stroke: c.ink, width: PEN.outline }) + k.rect(100, 186, 10, 16, { fill: c.shadow }) + k.line({ x: 80, y: 208 }, { x: 80, y: 360 }, { width: PEN.edge });
   a += k.line({ x: 330, y: 195 }, { x: 116, y: 194 }, { stroke: c.alt, width: 1.6, arrow: 'alt' }) + k.label(200, 182, 'L from the HDR', { size: 11.5, anchor: 'middle', fill: c.alt, weight: 600 });
   a += k.text(40, 400, 'ρ = π L / E  ·  e.g. π × 40 cd/m² / 250 lx = 0.50', { size: 13, fill: c.ink, weight: 700 });
-  // B: grey card in the same light.
-  let b = k.title(520, 36, 'B · Reflectance against a grey card in the frame');
+  // B: gray card in the same light.
+  let b = k.title(520, 36, 'B · Reflectance against a gray card in the frame');
   b += k.rect(540, 80, 400, 230, { fill: c.paper, stroke: c.ink, width: PEN.outline });
   b += k.rect(600, 140, 110, 110, { fill: c.face, stroke: c.ink, width: PEN.outline }) + k.rect(770, 140, 110, 110, { fill: c.paper, stroke: c.alt, width: 2.2 });
-  b += k.text(655, 270, 'grey card ρ = 0.18', { size: 11.5, anchor: 'middle', fill: c.ink }) + k.text(655, 287, 'L = 14 cd/m²', { size: 11.5, anchor: 'middle', fill: c.alt, weight: 600 });
+  b += k.text(655, 270, 'gray card ρ = 0.18', { size: 11.5, anchor: 'middle', fill: c.ink }) + k.text(655, 287, 'L = 14 cd/m²', { size: 11.5, anchor: 'middle', fill: c.alt, weight: 600 });
   b += k.text(825, 270, 'sample', { size: 11.5, anchor: 'middle', fill: c.ink }) + k.text(825, 287, 'L = 49 cd/m²', { size: 11.5, anchor: 'middle', fill: c.alt, weight: 600 });
   b += k.text(520, 340, 'ρx = ρcard · Lx / Lcard = 0.18 × 49 / 14 = 0.63', { size: 13, fill: c.ink, weight: 700 });
   b += lines(k, 520, 366, ['Same plane, same light, both matte, view not grazing.', 'Glossy or textured finishes: not diffuse, so no single ρ.'], { fill: c.ink });
-  return svgDocument(k, { width: 980, height: 420, title: 'Reflectance of a matte sample from luminance and illuminance, or against a grey card', body: k.group('lux', a) + k.group('grey-card', b) });
+  return svgDocument(k, { width: 980, height: 420, title: 'Reflectance of a matte sample from luminance and illuminance, or against a gray card', body: k.group('lux', a) + k.group('gray-card', b) });
 }
 
 /* 6 · Model, real space and simulation */
@@ -208,7 +208,7 @@ export function figUseEye(standalone = false) {
   const px = fp(C, R, 50, 125);
   fe += k.rect(px.x - 7, px.y - 7, 14, 14, { fill: c.paper, stroke: c.alt, width: 2 }) + k.line(C, px, { stroke: c.third, width: 1.2 });
   fe += k.label(px.x - 12, px.y - 14, 'pixel i: Li, ωi, θi', { size: 11.5, anchor: 'end', fill: c.alt, weight: 600 }) + k.label((C.x + px.x) / 2 + 8, (C.y + px.y) / 2 + 4, 'θi', { size: 11, fill: c.third, weight: 700 });
-  fe += k.text(C.x, C.y + R + 30, 'Centre pixels count fully; the rim counts nothing.', { size: 11.5, anchor: 'middle' });
+  fe += k.text(C.x, C.y + R + 30, 'Center pixels count fully; the rim counts nothing.', { size: 11.5, anchor: 'middle' });
   let b = k.title(520, 36, 'B · Read it as');
   b += lines(k, 520, 66, ['Ev = Σ Li · cos θi · ωi  over the whole hemisphere', 'Check it against the lux sensor at the lens (Section 05).', 'A large gap points to clipped sources, a cropped view', 'or the wrong lens projection.'], { fill: c.ink });
   b += k.text(520, 160, 'MELANOPIC ESTIMATE · APPROXIMATION', { size: 11, weight: 700, spacing: 1, fill: c.third });

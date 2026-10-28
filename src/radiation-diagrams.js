@@ -18,7 +18,7 @@ function arc3(v, Q, u, w, r, n = 24) {
     return v(...add(Q, a.map((x, j) => r * (ka * x + kb * b[j]))));
   });
 }
-/** Panel of side 1 with tilt TLT and orientation ORI, lower edge on the ground, centred over the origin. */
+/** Panel of side 1 with tilt TLT and orientation ORI, lower edge on the ground, centered over the origin. */
 function panel(tilt, ori) {
   const N = [sind(tilt) * sind(ori), sind(tilt) * cosd(ori), cosd(tilt)];
   const u = [cosd(ori), -sind(ori), 0], w = [-cosd(tilt) * sind(ori), -cosd(tilt) * cosd(ori), sind(tilt)];
@@ -32,7 +32,7 @@ export function drawIncidence(state, { standalone = false } = {}) {
   const k = kit(standalone, 'inc'), c = k.c, v = view(235, 22, 165, 330, 318);
   const sun = solarPosition(state.latitude, state.day, state.hour), i = incidence(sun, state.tilt, state.ori), p = panel(state.tilt, state.ori);
   const P = a => v(...a), C = P(p.C);
-  // Angle label just outside the middle of its arc, on the side away from the arc's centre.
+  // Angle label just outside the middle of its arc, on the side away from the arc's center.
   const arcLabel = (u, w, r, t, color) => {
     const m = add(u.map(x => x / Math.hypot(...u)), w.map(x => x / Math.hypot(...w))), q = P(add(p.C, m.map(x => x / (Math.hypot(...m) || 1)), r + .1));
     return k.label(q.x + (q.x >= C.x ? 4 : -4), q.y + 4, t, { size: 13, weight: 700, fill: color, anchor: q.x >= C.x ? 'start' : 'end' });

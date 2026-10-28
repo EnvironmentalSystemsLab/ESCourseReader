@@ -11,7 +11,7 @@ modules[1] = (() => {
  *   Eq. 7.2  Fourier, plane layer    q = λ ΔT / d
  *   Eq. 7.3  layer resistance        R = d / λ,  q = ΔT / R
  *   Eq. 7.4  convection (Newton)     q = h_c (T_s − T_air)
- *   Eq. 7.5  radiation, linearised   q = ε σ (T_s⁴ − T_sur⁴) ≈ h_r (T_s − T_sur),  h_r = 4 ε σ T_m³
+ *   Eq. 7.5  radiation, linearized   q = ε σ (T_s⁴ − T_sur⁴) ≈ h_r (T_s − T_sur),  h_r = 4 ε σ T_m³
  *   Eq. 7.6  surface resistance      R_s = 1 / (h_c + h_r)
  *   Eq. 7.7  total resistance        R_T = R_si + Σ d_j / λ_j + R_se,  U = 1 / R_T
  *   Eq. 7.8  heat flow               Φ = U A ΔT,  Q = Φ t
@@ -34,9 +34,9 @@ const sensibleHeat = (mass, specificHeat, deltaT) => mass * specificHeat * delta
 /** Eq. 7.3 — resistance of a homogeneous layer, m²K/W. */
 const layerResistance = (thickness, conductivity) => thickness / conductivity;
 
-/** Eq. 7.5 — linearised radiation coefficient of a black body at mean temperature T_m (°C), W/(m²K). */
+/** Eq. 7.5 — linearized radiation coefficient of a black body at mean temperature T_m (°C), W/(m²K). */
 const blackRadiationCoefficient = (meanTemp = 20) => 4 * SIGMA * (meanTemp + KELVIN) ** 3;
-/** Eq. 7.5 — exact net long-wave exchange of a small grey surface with large surroundings, W/m². */
+/** Eq. 7.5 — exact net long-wave exchange of a small gray surface with large surroundings, W/m². */
 const netRadiation = (emissivity, surfaceTemp, surroundingTemp) => emissivity * SIGMA * ((surfaceTemp + KELVIN) ** 4 - (surroundingTemp + KELVIN) ** 4);
 
 /** Convection coefficients of ISO 6946 Annex C: inside by heat-flow direction, outside from the wind speed v (m/s). */
@@ -69,7 +69,7 @@ const MATERIALS = {
   eps: { name: 'Expanded polystyrene (EPS)', lambda: 0.035, rho: 20, c: 1210, insulation: true },
   xps: { name: 'Extruded polystyrene (XPS)', lambda: 0.030, rho: 35, c: 1210, insulation: true },
   pir: { name: 'Polyisocyanurate (PIR) board', lambda: 0.023, rho: 32, c: 1400, insulation: true },
-  woodFibre: { name: 'Wood-fibre board', lambda: 0.042, rho: 160, c: 2100, insulation: true },
+  woodFibre: { name: 'Wood-fiber board', lambda: 0.042, rho: 160, c: 2100, insulation: true },
   cellulose: { name: 'Cellulose, blown', lambda: 0.040, rho: 50, c: 2000, insulation: true },
   straw: { name: 'Straw (compressed panel)', lambda: 0.052, rho: 110, c: 2000, insulation: true },
   cork: { name: 'Cork board', lambda: 0.039, rho: 120, c: 1800, insulation: true },
@@ -136,11 +136,11 @@ function inhomogeneous(sections, { rsi = RSI.horizontal, rse = RSE } = {}) {
   return { upper, lower, total, U: 1 / total, error: (upper - lower) / (2 * total), parts };
 }
 
-/** Temperature factor f_Rsi = (θ_si − θ_e) / (θ_i − θ_e); DIN 4108-2 requires f_Rsi ≥ 0.70 against mould. */
+/** Temperature factor f_Rsi = (θ_si − θ_e) / (θ_i − θ_e); DIN 4108-2 requires f_Rsi ≥ 0.70 against mold. */
 const temperatureFactor = (insideSurface, inside, outside) => (insideSurface - outside) / (inside - outside);
 const surfaceFactorFromU = (U, rsi = 0.25) => 1 - U * rsi;
-/** Surface temperature at which the surface air reaches 80 % RH (mould criterion), °C. */
-const mouldLimit = (temp, relativeHumidity) => dewPoint(temp, relativeHumidity * 100 / 80);
+/** Surface temperature at which the surface air reaches 80 % RH (mold criterion), °C. */
+const moldLimit = (temp, relativeHumidity) => dewPoint(temp, relativeHumidity * 100 / 80);
 
 /** Eq. 7.12 — thermal diffusivity (m²/s) and periodic penetration depth (m) for a period in hours. */
 const diffusivity = m => m.lambda / (m.rho * m.c);
@@ -200,8 +200,8 @@ function degreeDays(rows, base = 18, coolingBase = base, limit = base) {
 /** Eq. 8.6 — seasonal heating energy from H (W/K) and degree days (K·d), kWh. */
 const annualHeating = (H, hdd) => H * hdd * 24 / 1000;
 
-/** Utilisation factor of gains (ISO 13790 / DIN V 4108-6): γ = gains / losses, a = 1 + τ / 16 h. */
-function gainUtilisation(gains, losses, tau) {
+/** Utilization factor of gains (ISO 13790 / DIN V 4108-6): γ = gains / losses, a = 1 + τ / 16 h. */
+function gainUtilization(gains, losses, tau) {
   const g = gains / losses, a = 1 + tau / 16;
   return Math.abs(g - 1) < 1e-9 ? a / (a + 1) : (1 - g ** a) / (1 - g ** (a + 1));
 }
@@ -209,7 +209,7 @@ function gainUtilisation(gains, losses, tau) {
 /** Window transmittance from glazing, frame and edge: U_w = (U_g A_g + U_f A_f + ψ_g l_g) / A_w (ISO 10077-1). */
 const windowU = ({ Ug, Ag, Uf, Af, psi, edge }) => (Ug * Ag + Uf * Af + psi * edge) / (Ag + Af);
 
-/** Glazing of the lecture (centre of glass, EnergyPlus constructions). */
+/** Glazing of the lecture (center of glass, EnergyPlus constructions). */
 const GLAZING = {
   single: { name: 'Single, clear 3 mm', U: 5.894, shgc: 0.905, tvis: 0.913 },
   double: { name: 'Double, clear, 6 mm air', U: 2.72, shgc: 0.764, tvis: 0.812 },
@@ -228,7 +228,7 @@ function windowBalance(rows, irradiation, { U, shgc, area = 1, inside = 20 }) {
   return { months, loss: sum('loss'), gain: sum('gain'), net: sum('gain') - sum('loss') };
 }
 
-return { SIGMA, KELVIN, AIR, sensibleHeat, layerResistance, blackRadiationCoefficient, netRadiation, INSIDE_CONVECTION, outsideConvection, surfaceResistance, RSI, RSE, effectiveEmissivity, airLayer, MATERIALS, construction, temperatureProfile, dewPoint, parallelU, inhomogeneous, temperatureFactor, surfaceFactorFromU, mouldLimit, diffusivity, penetrationDepth, periodicResponse, effusivity, contactTemperature, timeConstant, MASS_CLASSES, ventilationCoefficient, heatLossCoefficient, heatBalance, balancePoint, degreeDays, annualHeating, gainUtilisation, windowU, GLAZING, windowBalance };
+return { SIGMA, KELVIN, AIR, sensibleHeat, layerResistance, blackRadiationCoefficient, netRadiation, INSIDE_CONVECTION, outsideConvection, surfaceResistance, RSI, RSE, effectiveEmissivity, airLayer, MATERIALS, construction, temperatureProfile, dewPoint, parallelU, inhomogeneous, temperatureFactor, surfaceFactorFromU, moldLimit, diffusivity, penetrationDepth, periodicResponse, effusivity, contactTemperature, timeConstant, MASS_CLASSES, ventilationCoefficient, heatLossCoefficient, heatBalance, balancePoint, degreeDays, annualHeating, gainUtilization, windowU, GLAZING, windowBalance };
 })();
 
 // palette.js
@@ -403,7 +403,7 @@ modules[5] = (() => {
 // Ink kit for the Chapter 02 drawings: the same drawing calls as svg.js, rendered in the
 // fine-liner manner of the hand-drawing figures (src/sketch.js). Surfaces stay white, shade and
 // shadow become hatching, grids become light pencil, and straight ink edges run slightly past
-// their corners as if ruled by hand. Angle colours (ALT, AZI, ZEN) are kept as coloured pencil.
+// their corners as if ruled by hand. Angle colors (ALT, AZI, ZEN) are kept as colored pencil.
 const { kit, f, LINE } = modules[3];
 
 /** Pen widths shared with sketch.js, taken from the common line weights (drawing units). */
@@ -439,7 +439,7 @@ function inkKit(standalone = false, prefix = 'd', options = {}) {
     if (INK.includes(r)) return { ...o, stroke: c.ink, width: Math.max(PEN.hatch, o.width ?? 1), arrow: o.arrow ? 'ink' : undefined };
     return o;
   };
-  /** Fill mapped to paper or hatching; data colours and warnings are kept. */
+  /** Fill mapped to paper or hatching; data colors and warnings are kept. */
   const fill = color => {
     const r = roleOf(color);
     if (r in ROLE_FILL) return H[ROLE_FILL[r]];
@@ -612,7 +612,7 @@ modules[2] = (() => {
 // Drawings for Chapters 07 (heat transfer through the envelope) and 08 (building heat balance), in the
 // fine-liner style of Chapters 02–06. Materials in section follow drafting convention: insulation as a
 // looped batt line, masonry and concrete hatched, plaster stippled, timber with grain. Temperatures are
-// drawn in the ALT blue, the dew point and mould limit in the AZI cyan and violet; warnings in red.
+// drawn in the ALT blue, the dew point and mold limit in the AZI cyan and violet; warnings in red.
 // Each function returns a complete SVG; { standalone: true } gives the editable file.
 const { svgDocument } = modules[3];
 
@@ -680,11 +680,11 @@ function materialFill(k, x, y, w, h, kind) {
 }
 
 /** Wavy arrow (heat flow in air) from a to b. */
-const flowArrow = (k, a, b, colour = k.c.heat, name = 'alt') => k.line(a, b, { stroke: colour, width: 1.6, arrow: name });
+const flowArrow = (k, a, b, color = k.c.heat, name = 'alt') => k.line(a, b, { stroke: color, width: 1.6, arrow: name });
 
 /* ---------- 07 · Layered construction with its temperature profile (Eq. 7.7–7.9) ---------- */
-/** state: { construction, profile, inside, outside, dew, mould, axis: 'thickness' | 'resistance', label } */
-function drawWallProfile({ construction: c0, profile: p, inside, outside, dew = null, mould = null, axis = 'thickness', label = '' }, { standalone = false } = {}) {
+/** state: { construction, profile, inside, outside, dew, mold, axis: 'thickness' | 'resistance', label } */
+function drawWallProfile({ construction: c0, profile: p, inside, outside, dew = null, mold = null, axis = 'thickness', label = '' }, { standalone = false } = {}) {
   const k = kit(standalone, 'wtp'), c = k.c, W = 720, top = 56, bottom = 330, airW = 70, x0 = 40 + airW, x1 = W - 40 - airW;
   const byR = axis === 'resistance', layers = c0.layers;
   // Horizontal scale: thickness (layers only) or thermal resistance (with the surface films as bands).
@@ -694,7 +694,7 @@ function drawWallProfile({ construction: c0, profile: p, inside, outside, dew = 
   const scale = (x1 - x0 - films[0] - films[1]) / widths.reduce((s, w) => s + w, 0);
   const xs = [x0 + films[0]]; widths.forEach(w => xs.push(xs[xs.length - 1] + w * scale));
   // Temperature scale.
-  const vals = [inside, outside, ...(dew !== null ? [dew] : []), ...(mould !== null ? [mould] : [])];
+  const vals = [inside, outside, ...(dew !== null ? [dew] : []), ...(mold !== null ? [mold] : [])];
   const tmin = Math.floor((Math.min(...vals) - 2) / 5) * 5, tmax = Math.ceil((Math.max(...vals) + 2) / 5) * 5;
   const Y = t => bottom - (t - tmin) / (tmax - tmin) * (bottom - top);
   let grid = '';
@@ -727,11 +727,11 @@ function drawWallProfile({ construction: c0, profile: p, inside, outside, dew = 
   lab += k.label(xs[xs.length - 1] - 6, Y(T[T.length - 2]) + 18, `θse ${deg(T[T.length - 2])}`, { size: 12, weight: 700, fill: c.alt, anchor: 'end' });
   for (let j = 1; j < xs.length - 1; j++) if (xs[j + 1] - xs[j] > 70 && xs[j] - xs[j - 1] > 40) lab += k.label(xs[j] + 5, Y(T[j + 1]) + (j % 2 ? -8 : 16), deg(T[j + 1]), { size: 10.5, fill: c.ink });
   lab += k.label(40 + 4, Y(inside) - 8, `θi ${deg(inside, 0)}`, { size: 12, weight: 700, fill: c.ink }) + k.label(W - 44, Y(outside) - 8, `θe ${deg(outside, 0)}`, { size: 12, weight: 700, fill: c.ink, anchor: 'end' });
-  // Dew point and mould limit of the room air.
+  // Dew point and mold limit of the room air.
   let lim = '';
   if (dew !== null) lim += k.line({ x: 40, y: Y(dew) }, { x: xs[0] + 40, y: Y(dew) }, { stroke: c.azi, width: 1.4, dash: '6 4' }) + k.label(xs[0] - 6, Y(dew) + 14, `dew point ${deg(dew)}`, { size: 10.5, fill: c.azi, anchor: 'end', weight: 600 });
-  if (mould !== null) lim += k.line({ x: 40, y: Y(mould) }, { x: xs[0] + 40, y: Y(mould) }, { stroke: c.third, width: 1.4, dash: '2 3' }) + k.label(xs[0] - 6, Y(mould) - 6, `mould limit ${deg(mould)}`, { size: 10.5, fill: c.third, anchor: 'end', weight: 600 });
-  if (mould !== null && T[1] < mould) lim += k.text(W / 2, top - 30, T[1] < dew ? 'Inside surface below the dew point: condensation' : 'Inside surface below the mould limit (80 % RH at the surface)', { size: 12, fill: c.red, anchor: 'middle', weight: 700 });
+  if (mold !== null) lim += k.line({ x: 40, y: Y(mold) }, { x: xs[0] + 40, y: Y(mold) }, { stroke: c.third, width: 1.4, dash: '2 3' }) + k.label(xs[0] - 6, Y(mold) - 6, `mold limit ${deg(mold)}`, { size: 10.5, fill: c.third, anchor: 'end', weight: 600 });
+  if (mold !== null && T[1] < mold) lim += k.text(W / 2, top - 30, T[1] < dew ? 'Inside surface below the dew point: condensation' : 'Inside surface below the mold limit (80 % RH at the surface)', { size: 12, fill: c.red, anchor: 'middle', weight: 700 });
   const head = caption(k, 40, 24, `${label}${label ? ' · ' : ''}U = ${n(c0.U, 3)} W/(m²K) · q = ${n(p.q, 1)} W/m² · x-axis: ${byR ? 'thermal resistance' : 'thickness'}`);
   const sides = k.text(40 + airW / 2, bottom + 52, 'INSIDE', { size: 10.5, weight: 700, anchor: 'middle', fill: c.ink, spacing: 1.2 }) + k.text(W - 40 - airW / 2, bottom + 52, 'OUTSIDE', { size: 10.5, weight: 700, anchor: 'middle', fill: c.ink, spacing: 1.2 })
     + flowArrow(k, { x: W / 2 - 50, y: bottom + 48 }, { x: W / 2 + 50, y: bottom + 48 }) + k.text(W / 2, bottom + 66, 'heat flow q', { size: 10.5, anchor: 'middle', fill: c.heat });
@@ -797,7 +797,7 @@ function drawStuds(r, st, { standalone = false } = {}) {
   plan += k.text(left - 8, y0 - 1, 'in', { size: 10.5, anchor: 'end', fill: c.ink, weight: 700 }) + k.text(left - 8, y0 + depth + 4, 'out', { size: 10.5, anchor: 'end', fill: c.ink, weight: 700 });
   plan += k.line({ x: left + bay / 2, y: y0 + depth + 18 }, { x: left + bay * 1.5, y: y0 + depth + 18 }, { stroke: c.ink, width: PEN.hatch }) + k.label(left + bay, y0 + depth + 32, `spacing ${st.spacing} mm`, { size: 10.5, anchor: 'middle', fill: c.ink });
   // Heat flux arrows, stroke width ∝ q of each path (upper-limit assumption: paths do not exchange heat).
-  const qi = r.parts[0].c.U, qs = r.parts[1].c.U, wmax = Math.max(qi, qs), arrow = (x, q, colour) => k.line({ x, y: y0 + 8 }, { x, y: y0 + depth - 8 }, { stroke: colour, width: Math.max(.8, 6 * q / wmax), arrow: 'alt' });
+  const qi = r.parts[0].c.U, qs = r.parts[1].c.U, wmax = Math.max(qi, qs), arrow = (x, q, color) => k.line({ x, y: y0 + 8 }, { x, y: y0 + depth - 8 }, { stroke: color, width: Math.max(.8, 6 * q / wmax), arrow: 'alt' });
   let flux = '';
   for (const f of [.15, .3, .7, .85]) flux += arrow(left + bay * f, qi, c.alt) + arrow(left + bay * (1 + f), qi, c.alt);
   for (const x of [left + bay / 2, left + bay * 1.5]) flux += arrow(x, qs, c.heat);
@@ -926,11 +926,11 @@ function heatQuizQuestions() {
     }),
     numeric('Section 05 · f_Rsi', '', 0.01, first => {
       const ti = 20, te = first ? -5 : between(-15, 0), U = first ? 1.2 : between(.3, 2.5, .1), tsi = ti - .25 * U * (ti - te), f = (tsi - te) / (ti - te);
-      return { answer: f, answerText: n(f, 2), prompt: `A wall corner has U = ${n(U, 1)} W/(m²K). With the mould check value R<sub>si</sub> = 0.25 m²K/W, θi = ${ti} °C and θe = ${te} °C, the corner surface reaches θsi = ${n(tsi, 1)} °C. What is its temperature factor f<sub>Rsi</sub>? (DIN 4108-2 requires ≥ 0.70.)`,
+      return { answer: f, answerText: n(f, 2), prompt: `A wall corner has U = ${n(U, 1)} W/(m²K). With the mold check value R<sub>si</sub> = 0.25 m²K/W, θi = ${ti} °C and θe = ${te} °C, the corner surface reaches θsi = ${n(tsi, 1)} °C. What is its temperature factor f<sub>Rsi</sub>? (DIN 4108-2 requires ≥ 0.70.)`,
         solution: eq(`f_Rsi = (θsi − θe) / (θi − θe) = (${n(tsi, 1)} − (${te})) / (${ti} − (${te})) = ${n(f, 2)}`) + `<p>${f >= .7 ? 'Meets' : 'Fails'} the DIN 4108-2 criterion f<sub>Rsi</sub> ≥ 0.70, which keeps the surface above 12.6 °C at −5 °C outside, the temperature at which room air of 20 °C and 50 % RH reaches 80 % RH at the surface.</p>` };
     }),
     { type: 'mc', ref: 'Section 06 · Eq. 7.10', prompt: 'A 50 mm unventilated cavity has R<sub>g</sub> ≈ 0.18 m²K/W, a 100 mm cavity the same. What changes R<sub>g</sub> substantially?', options: ['A low-emissivity foil on one face (ε ≈ 0.05): R<sub>g</sub> rises to about 0.6', 'Doubling the cavity to 200 mm', 'Painting both faces white', 'Filling the cavity with ventilated outdoor air'], correct: 0,
-      solution: '<p>Beyond about 20 mm, convection cells form and radiation, which does not depend on the width, carries most of the heat. Only lowering the emissivity of a face reduces it: E = 1 / (1/0.9 + 1/0.05 − 1) ≈ 0.05. White paint has ε ≈ 0.9 in the long-wave range; colour matters only for sunlight.</p>' },
+      solution: '<p>Beyond about 20 mm, convection cells form and radiation, which does not depend on the width, carries most of the heat. Only lowering the emissivity of a face reduces it: E = 1 / (1/0.9 + 1/0.05 − 1) ≈ 0.05. White paint has ε ≈ 0.9 in the long-wave range; color matters only for sunlight.</p>' },
     { type: 'mc', ref: 'Section 07 · ISO 6946', prompt: 'Insulation between studs: the stud path has U = 0.6, the insulation path U = 0.2 W/(m²K), studs cover 15 % of the area. For the upper limit, the paths are combined…', options: ['area-weighted: U = 0.85 × 0.2 + 0.15 × 0.6 = 0.26 W/(m²K)', 'by adding the resistances of both paths', 'by taking the insulation value only', 'by taking the stud value as the worst case'], correct: 0,
       solution: '<p>Parallel paths add their conductances weighted by area (Eq. 7.11). The resistances add only in series. ISO 6946 averages this upper limit of R with a lower limit from isothermal planes; for steel studs the two limits differ too much and a numerical calculation is required.</p>' },
     { type: 'mc', ref: 'Section 08 · transient', prompt: 'When can a steady-state U-value calculation NOT predict the result well?', options: ['Peak indoor temperatures on a sunny summer day in a heavy building', 'Annual heating energy of a well-insulated house in a cold climate', 'Comparing two wall options by U-value', 'The heat loss on a cold, overcast winter night'], correct: 0,
@@ -1085,7 +1085,7 @@ return { fitDiagramText };
 
 // solar.js
 modules[12] = (() => {
-/** Geometric solar model for the course reader. Degrees, metres, minutes, solar hours.
+/** Geometric solar model for the course reader. Degrees, meters, minutes, solar hours.
  * The equations follow Szokolay, Method sheet M.1.1:
  *   DEC  Cooper (1969):  DEC = 23.45 sin[360/365 (284 + NDY)]
  *   EOT  Spencer (1971), as in Duffie & Beckman: B = (NDY - 1) 360/365
@@ -1275,7 +1275,7 @@ function polygonsOverlap(a, b) {
   }
   return true;
 }
-/** Massing study (default: Ithaca, March 21). The neighbours lie north of the proposed building. */
+/** Massing study (default: Ithaca, March 21). The neighbors lie north of the proposed building. */
 function massingStudy(height = 6, gap = 3, solarHour = 12, day = 80, latitude = 42.4) {
   const sun = solarPosition(latitude, day, solarHour);
   const wings = [{ x: -3, y: 0, w: 3, d: 6, h: 3 }, { x: 0, y: 0, w: 3, d: 6, h: height }];
@@ -1456,7 +1456,7 @@ return { latLabel, calc, host, LAT, DAY, HOUR, DAY_PLAY, range, stop, update, mo
 // heat-reader.js
 modules[0] = (() => {
 // Chapter 07 (heat transfer through the envelope): four interactive drawings, the self-test and navigation.
-const { MATERIALS, construction, temperatureProfile, dewPoint, mouldLimit, temperatureFactor, surfaceResistance, INSIDE_CONVECTION, outsideConvection, airLayer, inhomogeneous, RSI, RSE } = modules[1];
+const { MATERIALS, construction, temperatureProfile, dewPoint, moldLimit, temperatureFactor, surfaceResistance, INSIDE_CONVECTION, outsideConvection, airLayer, inhomogeneous, RSI, RSE } = modules[1];
 
 const { drawWallProfile, drawSurface, drawAirLayer, drawStuds } = modules[2];
 
@@ -1491,11 +1491,11 @@ function wallOf(st) {
   const c = construction(layers, { rse: def.rse ?? RSE }), p = temperatureProfile(c, st.inside, st.outside);
   // Moisture check of DIN 4108-2 / ISO 13788: R_si = 0.25 for corners and surfaces behind furniture.
   const p25 = temperatureProfile(construction(layers, { rsi: .25, rse: def.rse ?? RSE }), st.inside, st.outside);
-  return { def, c, p, p25, dew: dewPoint(st.inside, st.rh), mould: mouldLimit(st.inside, st.rh) };
+  return { def, c, p, p25, dew: dewPoint(st.inside, st.rh), mold: moldLimit(st.inside, st.rh) };
 }
-const drawWall = (st, standalone = false) => { const { def, c, p, dew, mould } = wallOf(st); return drawWallProfile({ construction: c, profile: p, inside: st.inside, outside: st.outside, dew, mould, axis: st.axis, label: def.label }, { standalone }); };
+const drawWall = (st, standalone = false) => { const { def, c, p, dew, mold } = wallOf(st); return drawWallProfile({ construction: c, profile: p, inside: st.inside, outside: st.outside, dew, mold, axis: st.axis, label: def.label }, { standalone }); };
 function renderWall(st) {
-  const { def, c, p, p25, dew, mould } = wallOf(st), t25 = p25.insideSurface, f = temperatureFactor(t25, st.inside, st.outside);
+  const { def, c, p, p25, dew, mold } = wallOf(st), t25 = p25.insideSurface, f = temperatureFactor(t25, st.inside, st.outside);
   host('d-wall', drawWall(st));
   const rows = c.layers.map((l, j) => [String(j + 1), `${l.name} · d = ${n(l.thickness * 1000, l.thickness < .02 ? 1 : 0)} mm / λ = ${n(l.lambda, 3)}`, `R = ${n(l.resistance, 3)}`]);
   calc('calc-wall', [
@@ -1513,8 +1513,8 @@ function renderWall(st) {
     ['θ<sub>si,0.25</sub>', 'with R<sub>si</sub> = 0.25: corners, behind furniture (DIN 4108-2)', deg(t25)],
     ['f<sub>Rsi</sub>', '(θ<sub>si,0.25</sub> − θe) / (θi − θe), required ≥ 0.70', n(f, 2), f < .7 ? 'warn' : undefined],
     ['θ<sub>dew</sub>', `room air ${st.inside} °C, ${st.rh} % RH`, deg(dew)],
-    ['θ<sub>80%</sub>', 'mould limit: 80 % RH at the surface', deg(mould)],
-    p.insideSurface < dew ? ['', 'Condensation on the inside surface', '', 'warn'] : t25 < mould ? ['', 'Corners and surfaces behind furniture fall below the mould limit at this condition', '', 'warn'] : ['', `Corner surface ${n(t25 - mould, 1)} K above the mould limit`, ''],
+    ['θ<sub>80%</sub>', 'mold limit: 80 % RH at the surface', deg(mold)],
+    p.insideSurface < dew ? ['', 'Condensation on the inside surface', '', 'warn'] : t25 < mold ? ['', 'Corners and surfaces behind furniture fall below the mold limit at this condition', '', 'warn'] : ['', `Corner surface ${n(t25 - mold, 1)} K above the mold limit`, ''],
     ...(def.note ? [['', def.note, '']] : []),
   ]);
 }
@@ -1583,7 +1583,7 @@ const LABS = [
   { id: 'surface', state: { side: 'inside', direction: 'horizontal', emissivity: .9, wind: 4 },
     inputs: [select('side', 'Surface', [['inside', 'Inside (room air)'], ['outside', 'Outside (wind)']]), select('direction', 'Heat flow direction (inside)', [['horizontal', 'Horizontal: walls, windows'], ['up', 'Upward: ceilings, roofs'], ['down', 'Downward: floors']]),
       range('emissivity', 'Long-wave emissivity ε', .02, .95, .01, v => n(v, 2)), range('wind', 'Wind speed v (outside)', 0, 10, .5, v => `${n(v, 1)} m/s`),
-      { type: 'presets', label: 'SURFACES', buttons: [['Painted, plaster (ε 0.9)', { emissivity: .9 }], ['Low-e coating (ε 0.05)', { emissivity: .05 }], ['Galvanised steel (ε 0.28)', { emissivity: .28 }]] }],
+      { type: 'presets', label: 'SURFACES', buttons: [['Painted, plaster (ε 0.9)', { emissivity: .9 }], ['Low-e coating (ε 0.05)', { emissivity: .05 }], ['Galvanized steel (ε 0.28)', { emissivity: .28 }]] }],
     render: renderSurface, save: st => drawSurface(st, { standalone: true }) },
   { id: 'cavity', state: { thickness: 25, direction: 'horizontal', e1: .9, e2: .9 },
     inputs: [range('thickness', 'Air layer thickness d', 0, 100, 1, v => `${v} mm`), select('direction', 'Heat flow direction', [['horizontal', 'Horizontal (wall)'], ['up', 'Upward (roof, ceiling)'], ['down', 'Downward (floor)']]),

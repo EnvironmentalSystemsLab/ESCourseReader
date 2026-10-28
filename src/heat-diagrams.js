@@ -1,7 +1,7 @@
 // Drawings for Chapters 07 (heat transfer through the envelope) and 08 (building heat balance), in the
 // fine-liner style of Chapters 02–06. Materials in section follow drafting convention: insulation as a
 // looped batt line, masonry and concrete hatched, plaster stippled, timber with grain. Temperatures are
-// drawn in the ALT blue, the dew point and mould limit in the AZI cyan and violet; warnings in red.
+// drawn in the ALT blue, the dew point and mold limit in the AZI cyan and violet; warnings in red.
 // Each function returns a complete SVG; { standalone: true } gives the editable file.
 import { svgDocument } from './svg.js';
 import { inkKit as kit, PEN } from './ink.js';
@@ -66,11 +66,11 @@ export function materialFill(k, x, y, w, h, kind) {
 }
 
 /** Wavy arrow (heat flow in air) from a to b. */
-const flowArrow = (k, a, b, colour = k.c.heat, name = 'alt') => k.line(a, b, { stroke: colour, width: 1.6, arrow: name });
+const flowArrow = (k, a, b, color = k.c.heat, name = 'alt') => k.line(a, b, { stroke: color, width: 1.6, arrow: name });
 
 /* ---------- 07 · Layered construction with its temperature profile (Eq. 7.7–7.9) ---------- */
-/** state: { construction, profile, inside, outside, dew, mould, axis: 'thickness' | 'resistance', label } */
-export function drawWallProfile({ construction: c0, profile: p, inside, outside, dew = null, mould = null, axis = 'thickness', label = '' }, { standalone = false } = {}) {
+/** state: { construction, profile, inside, outside, dew, mold, axis: 'thickness' | 'resistance', label } */
+export function drawWallProfile({ construction: c0, profile: p, inside, outside, dew = null, mold = null, axis = 'thickness', label = '' }, { standalone = false } = {}) {
   const k = kit(standalone, 'wtp'), c = k.c, W = 720, top = 56, bottom = 330, airW = 70, x0 = 40 + airW, x1 = W - 40 - airW;
   const byR = axis === 'resistance', layers = c0.layers;
   // Horizontal scale: thickness (layers only) or thermal resistance (with the surface films as bands).
@@ -80,7 +80,7 @@ export function drawWallProfile({ construction: c0, profile: p, inside, outside,
   const scale = (x1 - x0 - films[0] - films[1]) / widths.reduce((s, w) => s + w, 0);
   const xs = [x0 + films[0]]; widths.forEach(w => xs.push(xs[xs.length - 1] + w * scale));
   // Temperature scale.
-  const vals = [inside, outside, ...(dew !== null ? [dew] : []), ...(mould !== null ? [mould] : [])];
+  const vals = [inside, outside, ...(dew !== null ? [dew] : []), ...(mold !== null ? [mold] : [])];
   const tmin = Math.floor((Math.min(...vals) - 2) / 5) * 5, tmax = Math.ceil((Math.max(...vals) + 2) / 5) * 5;
   const Y = t => bottom - (t - tmin) / (tmax - tmin) * (bottom - top);
   let grid = '';
@@ -113,11 +113,11 @@ export function drawWallProfile({ construction: c0, profile: p, inside, outside,
   lab += k.label(xs[xs.length - 1] - 6, Y(T[T.length - 2]) + 18, `θse ${deg(T[T.length - 2])}`, { size: 12, weight: 700, fill: c.alt, anchor: 'end' });
   for (let j = 1; j < xs.length - 1; j++) if (xs[j + 1] - xs[j] > 70 && xs[j] - xs[j - 1] > 40) lab += k.label(xs[j] + 5, Y(T[j + 1]) + (j % 2 ? -8 : 16), deg(T[j + 1]), { size: 10.5, fill: c.ink });
   lab += k.label(40 + 4, Y(inside) - 8, `θi ${deg(inside, 0)}`, { size: 12, weight: 700, fill: c.ink }) + k.label(W - 44, Y(outside) - 8, `θe ${deg(outside, 0)}`, { size: 12, weight: 700, fill: c.ink, anchor: 'end' });
-  // Dew point and mould limit of the room air.
+  // Dew point and mold limit of the room air.
   let lim = '';
   if (dew !== null) lim += k.line({ x: 40, y: Y(dew) }, { x: xs[0] + 40, y: Y(dew) }, { stroke: c.azi, width: 1.4, dash: '6 4' }) + k.label(xs[0] - 6, Y(dew) + 14, `dew point ${deg(dew)}`, { size: 10.5, fill: c.azi, anchor: 'end', weight: 600 });
-  if (mould !== null) lim += k.line({ x: 40, y: Y(mould) }, { x: xs[0] + 40, y: Y(mould) }, { stroke: c.third, width: 1.4, dash: '2 3' }) + k.label(xs[0] - 6, Y(mould) - 6, `mould limit ${deg(mould)}`, { size: 10.5, fill: c.third, anchor: 'end', weight: 600 });
-  if (mould !== null && T[1] < mould) lim += k.text(W / 2, top - 30, T[1] < dew ? 'Inside surface below the dew point: condensation' : 'Inside surface below the mould limit (80 % RH at the surface)', { size: 12, fill: c.red, anchor: 'middle', weight: 700 });
+  if (mold !== null) lim += k.line({ x: 40, y: Y(mold) }, { x: xs[0] + 40, y: Y(mold) }, { stroke: c.third, width: 1.4, dash: '2 3' }) + k.label(xs[0] - 6, Y(mold) - 6, `mold limit ${deg(mold)}`, { size: 10.5, fill: c.third, anchor: 'end', weight: 600 });
+  if (mold !== null && T[1] < mold) lim += k.text(W / 2, top - 30, T[1] < dew ? 'Inside surface below the dew point: condensation' : 'Inside surface below the mold limit (80 % RH at the surface)', { size: 12, fill: c.red, anchor: 'middle', weight: 700 });
   const head = caption(k, 40, 24, `${label}${label ? ' · ' : ''}U = ${n(c0.U, 3)} W/(m²K) · q = ${n(p.q, 1)} W/m² · x-axis: ${byR ? 'thermal resistance' : 'thickness'}`);
   const sides = k.text(40 + airW / 2, bottom + 52, 'INSIDE', { size: 10.5, weight: 700, anchor: 'middle', fill: c.ink, spacing: 1.2 }) + k.text(W - 40 - airW / 2, bottom + 52, 'OUTSIDE', { size: 10.5, weight: 700, anchor: 'middle', fill: c.ink, spacing: 1.2 })
     + flowArrow(k, { x: W / 2 - 50, y: bottom + 48 }, { x: W / 2 + 50, y: bottom + 48 }) + k.text(W / 2, bottom + 66, 'heat flow q', { size: 10.5, anchor: 'middle', fill: c.heat });
@@ -183,7 +183,7 @@ export function drawStuds(r, st, { standalone = false } = {}) {
   plan += k.text(left - 8, y0 - 1, 'in', { size: 10.5, anchor: 'end', fill: c.ink, weight: 700 }) + k.text(left - 8, y0 + depth + 4, 'out', { size: 10.5, anchor: 'end', fill: c.ink, weight: 700 });
   plan += k.line({ x: left + bay / 2, y: y0 + depth + 18 }, { x: left + bay * 1.5, y: y0 + depth + 18 }, { stroke: c.ink, width: PEN.hatch }) + k.label(left + bay, y0 + depth + 32, `spacing ${st.spacing} mm`, { size: 10.5, anchor: 'middle', fill: c.ink });
   // Heat flux arrows, stroke width ∝ q of each path (upper-limit assumption: paths do not exchange heat).
-  const qi = r.parts[0].c.U, qs = r.parts[1].c.U, wmax = Math.max(qi, qs), arrow = (x, q, colour) => k.line({ x, y: y0 + 8 }, { x, y: y0 + depth - 8 }, { stroke: colour, width: Math.max(.8, 6 * q / wmax), arrow: 'alt' });
+  const qi = r.parts[0].c.U, qs = r.parts[1].c.U, wmax = Math.max(qi, qs), arrow = (x, q, color) => k.line({ x, y: y0 + 8 }, { x, y: y0 + depth - 8 }, { stroke: color, width: Math.max(.8, 6 * q / wmax), arrow: 'alt' });
   let flux = '';
   for (const f of [.15, .3, .7, .85]) flux += arrow(left + bay * f, qi, c.alt) + arrow(left + bay * (1 + f), qi, c.alt);
   for (const x of [left + bay / 2, left + bay * 1.5]) flux += arrow(x, qs, c.heat);

@@ -1,7 +1,7 @@
 // Ink kit for the Chapter 02 drawings: the same drawing calls as svg.js, rendered in the
 // fine-liner manner of the hand-drawing figures (src/sketch.js). Surfaces stay white, shade and
 // shadow become hatching, grids become light pencil, and straight ink edges run slightly past
-// their corners as if ruled by hand. Angle colours (ALT, AZI, ZEN) are kept as coloured pencil.
+// their corners as if ruled by hand. Angle colors (ALT, AZI, ZEN) are kept as colored pencil.
 import { kit, f, LINE } from './svg.js';
 
 /** Pen widths shared with sketch.js, taken from the common line weights (drawing units). */
@@ -37,7 +37,7 @@ export function inkKit(standalone = false, prefix = 'd', options = {}) {
     if (INK.includes(r)) return { ...o, stroke: c.ink, width: Math.max(PEN.hatch, o.width ?? 1), arrow: o.arrow ? 'ink' : undefined };
     return o;
   };
-  /** Fill mapped to paper or hatching; data colours and warnings are kept. */
+  /** Fill mapped to paper or hatching; data colors and warnings are kept. */
   const fill = color => {
     const r = roleOf(color);
     if (r in ROLE_FILL) return H[ROLE_FILL[r]];
